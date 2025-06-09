@@ -20,11 +20,15 @@ repositories {
 
 dependencyManagement {
     dependencies {
+        dependency 'org.mapstruct:mapstruct:1.6.3'
+        dependency 'org.mapstruct:mapstruct-processor:1.6.3'
         dependency 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8'
     }
 }
 
 dependencies {
+    implementation 'org.mapstruct:mapstruct'
+    annotationProcessor 'org.mapstruct:mapstruct-processor'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'org.springframework.boot:spring-boot-starter-web'
