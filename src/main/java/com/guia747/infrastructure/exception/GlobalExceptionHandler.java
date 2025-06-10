@@ -15,6 +15,7 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import com.guia747.domain.exception.InvalidSocialAuthenticationTokenException;
 import com.guia747.domain.exception.SocialAuthenticationException;
@@ -59,6 +60,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         var response = ApiErrorResponse.createNew(status,
                 "O método HTTP utilizado não é suportado para este endpoint.");
         return ResponseEntity.status(status).body(response);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleNoHandlerFoundException(
+            @NonNull NoHandlerFoundException ex,
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatusCode status,
+            @NonNull WebRequest request
+    ) {
+        return ResponseEntity.status(status).body(ApiErrorResponse.notFound());
     }
 
     @ExceptionHandler(MissingRequestHeaderException.class)

@@ -36,6 +36,10 @@ public class ApiErrorResponse {
                 "A requisição contém dados inválidos. Por favor, revise todos os campos.");
     }
 
+    public static ApiErrorResponse notFound() {
+        return createNew(HttpStatus.NOT_FOUND, "O recurso solicitado não foi encontrado. Por favor, verifique a URL.");
+    }
+
     public int getStatus() {
         return status;
     }
