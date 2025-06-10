@@ -40,7 +40,7 @@ public class AuthenticateWithSocialProviderUseCaseImpl implements AuthenticateWi
         );
         boolean isNewAccount = existingAccount.isEmpty();
 
-        TokenPair tokenPair = jwtTokenService.generateTokenPair(userAccount);
+        TokenPair tokenPair = jwtTokenService.generateTokenPair(userAccount.getId());
         return new SocialAuthenticationResult(userAccount.getId(), tokenPair, isNewAccount);
     }
 }

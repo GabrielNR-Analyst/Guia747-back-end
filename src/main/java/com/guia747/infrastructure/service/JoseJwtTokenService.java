@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import com.guia747.domain.entity.RefreshTokenSession;
-import com.guia747.domain.entity.UserAccount;
 import com.guia747.domain.repository.RefreshTokenSessionRepository;
 import com.guia747.domain.vo.TokenPair;
 import com.guia747.infrastructure.config.properties.AppProperties;
@@ -52,7 +51,7 @@ public class JoseJwtTokenService implements JwtTokenService {
     }
 
     @Override
-    public TokenPair generateTokenPair(UserAccount userAccount) {
+    public TokenPair generateTokenPair(UUID accountId) {
         try {
             Instant now = Instant.now();
             Instant accessTokenExpiry = now.plus(jwtProperties.accessTokenExpiration());
@@ -60,7 +59,7 @@ public class JoseJwtTokenService implements JwtTokenService {
             String jwtId = UUID.randomUUID().toString();
             JWTClaimsSet accessTokenClaims = new JWTClaimsSet.Builder()
                     .jwtID(jwtId)
-                    .subject(userAccount.getId().toString())
+                    .subject(accountId.toString())
                     .issueTime(Date.from(now))
                     .expirationTime(Date.from(accessTokenExpiry))
                     .build();
@@ -71,7 +70,7 @@ public class JoseJwtTokenService implements JwtTokenService {
             RefreshTokenSession session = new RefreshTokenSession(
                     refreshToken,
                     jwtId,
-                    userAccount.getId(),
+                    accountId,
                     jwtProperties.refreshTokenExpiration()
             );
             refreshTokenRepository.save(session);
