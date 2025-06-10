@@ -1,8 +1,8 @@
 package com.guia747.application.usecase;
 
-import com.guia747.web.dto.GoogleAuthenticationResponse;
+import com.guia747.application.dto.GoogleAuthenticationResult;
 
 public interface AuthenticateWithGoogleUseCase {
 
-    GoogleAuthenticationResponse execute(String googleIdToken);
+    GoogleAuthenticationResult execute(String googleIdToken);
 }
