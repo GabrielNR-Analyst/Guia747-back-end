@@ -9,7 +9,7 @@ public record AuthenticationResponse(
                 description = "The unique identifier for the user account.",
                 example = "123e4567-e89b-12d3-a456-426614174000"
         )
-        UUID accountID,
+        UUID accountId,
 
         @Schema(
                 description = "The JWT Access Token for authorizing subsequent requests to the API",
