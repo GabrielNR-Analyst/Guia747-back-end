@@ -1,6 +1,6 @@
 package com.guia747.domain.entity;
 
-import com.guia747.domain.vo.GoogleUserInfo;
+import com.guia747.domain.vo.SocialUserProfile;
 
 public class UserAccount extends AggregateRoot {
 
@@ -15,10 +15,10 @@ public class UserAccount extends AggregateRoot {
         this.name = name;
     }
 
-    public static UserAccount createFromGoogleAuth(GoogleUserInfo googleUserInfo) {
-        var account = new UserAccount(googleUserInfo.email(), googleUserInfo.name());
-        account.googleId = googleUserInfo.googleId();
-        account.profilePictureUrl = googleUserInfo.pictureUrl();
+    public static UserAccount createFromSocialProfile(SocialUserProfile socialUserProfile) {
+        var account = new UserAccount(socialUserProfile.email(), socialUserProfile.name());
+        account.googleId = socialUserProfile.providerId();
+        account.profilePictureUrl = socialUserProfile.pictureUrl();
 
         return account;
     }

@@ -5,7 +5,14 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 @ConfigurationProperties(prefix = "app")
 public record AppProperties(
-        @NestedConfigurationProperty AppSecurityProperties security
+        @NestedConfigurationProperty AppSecurityProperties security,
+        @NestedConfigurationProperty SocialProperties social
 ) {
 
+    public record SocialProperties(GoogleProperties google) {
+
+        public record GoogleProperties(String clientId) {
+
+        }
+    }
 }

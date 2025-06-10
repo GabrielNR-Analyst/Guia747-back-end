@@ -3,33 +3,34 @@ package com.guia747.infrastructure.service;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.guia747.domain.exception.GoogleUserInfoUnavailableException;
 import com.guia747.domain.exception.InvalidGoogleTokenException;
-import com.guia747.domain.service.GoogleTokenValidator;
-import com.guia747.domain.vo.GoogleUserInfo;
-import com.guia747.infrastructure.config.properties.GoogleProperties;
+import com.guia747.domain.service.SocialAuthenticationProvider;
+import com.guia747.domain.vo.SocialAuthenticationToken;
+import com.guia747.domain.vo.SocialUserProfile;
+import com.guia747.infrastructure.config.properties.AppProperties;
 import com.guia747.infrastructure.exception.GoogleTokenProcessingException;
 
-@Component
-public class GoogleApiClientTokenValidator implements GoogleTokenValidator {
+@Service
+public class GoogleSocialAuthenticationProvider implements SocialAuthenticationProvider {
 
     private final GoogleIdTokenVerifier verifier;
 
-    public GoogleApiClientTokenValidator(GoogleProperties googleProperties) {
+    public GoogleSocialAuthenticationProvider(AppProperties appProperties) {
         this.verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance())
-                .setAudience(Collections.singletonList(googleProperties.clientId()))
+                .setAudience(Collections.singletonList(appProperties.social().google().clientId()))
                 .build();
     }
 
     @Override
-    public GoogleUserInfo validateTokenAndExtractUserInfo(String token) {
+    public SocialUserProfile validateTokenAndExtractProfile(SocialAuthenticationToken token) {
         try {
-            GoogleIdToken idToken = verifier.verify(token);
+            GoogleIdToken idToken = verifier.verify(token.value());
             if (idToken == null) {
                 throw new InvalidGoogleTokenException();
             }
@@ -49,7 +50,7 @@ public class GoogleApiClientTokenValidator implements GoogleTokenValidator {
                 );
             }
 
-            return new GoogleUserInfo(googleUserId, email, name, pictureUrl);
+            return new SocialUserProfile(googleUserId, email, name, pictureUrl);
         } catch (GeneralSecurityException | IOException e) {
             throw new GoogleTokenProcessingException("Error processing Google token", e);
         } catch (IllegalArgumentException e) {
