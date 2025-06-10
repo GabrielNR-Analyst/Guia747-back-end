@@ -1,7 +1,9 @@
 package com.guia747.infrastructure.service;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.util.Date;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
 import com.guia747.domain.entity.UserAccount;
 import com.guia747.domain.vo.TokenPair;
@@ -60,6 +62,35 @@ public class JoseJwtTokenService implements JwtTokenService {
                     jwtProperties.refreshTokenExpiration().toSeconds()
             );
         } catch (JOSEException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean validateAccessToken(String accessToken) {
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(accessToken);
+
+            // Verify signature
+            if (!signedJWT.verify(verifier)) {
+                return false;
+            }
+
+            JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
+            return !claims.getExpirationTime().before(new Date());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public UUID extractAccountIdFromAccessToken(String accessToken) {
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(accessToken);
+            JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
+
+            return UUID.fromString(claims.getSubject());
+        } catch (ParseException e) {
             throw new RuntimeException(e);
         }
     }
