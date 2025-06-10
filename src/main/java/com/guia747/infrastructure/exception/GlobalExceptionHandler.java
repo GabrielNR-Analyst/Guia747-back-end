@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import com.guia747.domain.exception.InvalidSocialAuthenticationTokenException;
+import com.guia747.domain.exception.SocialAuthenticationException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -72,5 +74,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         LOGGER.error("Unhandled exception: ", ex);
         var response = ApiErrorResponse.createNew(HttpStatus.INTERNAL_SERVER_ERROR, "Ocorreu um erro interno.");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+
+    @ExceptionHandler(SocialAuthenticationException.class)
+    public ResponseEntity<ApiErrorResponse> handleSocialAuthenticationException(SocialAuthenticationException ex) {
+        if (ex instanceof InvalidSocialAuthenticationTokenException) {
+            var response = ApiErrorResponse.createNew(HttpStatus.UNAUTHORIZED, ex.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+        var response = ApiErrorResponse.createNew(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return ResponseEntity.badRequest().body(response);
     }
 }
