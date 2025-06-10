@@ -2,8 +2,10 @@ package com.guia747;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
+@ConfigurationPropertiesScan(basePackages = "com.guia747.infrastructure.config.properties")
 public class Guia747Application {
 
     public static void main(String[] args) {
