@@ -12,7 +12,7 @@ import com.guia747.domain.exception.GoogleUserInfoUnavailableException;
 import com.guia747.domain.exception.InvalidGoogleTokenException;
 import com.guia747.domain.service.GoogleTokenValidator;
 import com.guia747.domain.vo.GoogleUserInfo;
-import com.guia747.infrastructure.config.GoogleProperties;
+import com.guia747.infrastructure.config.properties.GoogleProperties;
 import com.guia747.infrastructure.exception.GoogleTokenProcessingException;
 
 @Component
@@ -22,7 +22,7 @@ public class GoogleApiClientTokenValidator implements GoogleTokenValidator {
 
     public GoogleApiClientTokenValidator(GoogleProperties googleProperties) {
         this.verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance())
-                .setAudience(Collections.singletonList(googleProperties.getClientId()))
+                .setAudience(Collections.singletonList(googleProperties.clientId()))
                 .build();
     }
 
