@@ -1,8 +1,8 @@
 package com.guia747.application.usecase;
 
-import com.guia747.application.dto.SocialAuthenticationResponse;
+import com.guia747.application.dto.SocialAuthenticationResult;
 
 public interface AuthenticateWithSocialProviderUseCase {
 
-    SocialAuthenticationResponse execute(String googleIdToken);
+    SocialAuthenticationResult execute(String googleIdToken);
 }

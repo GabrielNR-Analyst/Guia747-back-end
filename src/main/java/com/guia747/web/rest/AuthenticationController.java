@@ -2,12 +2,13 @@ package com.guia747.web.rest;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.guia747.application.dto.SocialAuthenticationResponse;
+import com.guia747.application.dto.SocialAuthenticationResult;
 import com.guia747.application.usecase.AuthenticateWithSocialProviderUseCase;
 import com.guia747.web.dto.AuthenticationResponse;
 
@@ -27,7 +28,7 @@ public class AuthenticationController {
             HttpServletResponse httpResponse
     ) {
         String accessToken = authorizationHeader.substring("Bearer ".length());
-        SocialAuthenticationResponse result = authenticateWithSocialProviderUseCase.execute(accessToken);
+        SocialAuthenticationResult result = authenticateWithSocialProviderUseCase.execute(accessToken);
 
         var response = new AuthenticationResponse(
                 result.userId(),
@@ -36,6 +37,7 @@ public class AuthenticationController {
                 "Bearer"
         );
 
-        return ResponseEntity.ok(response);
+        HttpStatus status = result.isNewAccount() ? HttpStatus.CREATED : HttpStatus.OK;
+        return ResponseEntity.status(status).body(response);
     }
 }

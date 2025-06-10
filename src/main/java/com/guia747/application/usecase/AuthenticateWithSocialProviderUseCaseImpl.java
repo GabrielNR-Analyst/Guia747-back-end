@@ -3,7 +3,7 @@ package com.guia747.application.usecase;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.guia747.application.dto.SocialAuthenticationResponse;
+import com.guia747.application.dto.SocialAuthenticationResult;
 import com.guia747.domain.entity.UserAccount;
 import com.guia747.domain.repository.UserAccountRepository;
 import com.guia747.domain.service.SocialAuthenticationProvider;
@@ -30,7 +30,7 @@ public class AuthenticateWithSocialProviderUseCaseImpl implements AuthenticateWi
 
     @Override
     @Transactional
-    public SocialAuthenticationResponse execute(String authenticationToken) {
+    public SocialAuthenticationResult execute(String authenticationToken) {
         var authToken = new SocialAuthenticationToken(authenticationToken);
         SocialUserProfile socialUserProfile = socialAuthenticationProvider.validateTokenAndExtractProfile(authToken);
 
@@ -41,6 +41,6 @@ public class AuthenticateWithSocialProviderUseCaseImpl implements AuthenticateWi
         boolean isNewAccount = existingAccount.isEmpty();
 
         TokenPair tokenPair = jwtTokenService.generateTokenPair(userAccount);
-        return new SocialAuthenticationResponse(userAccount.getId(), tokenPair, isNewAccount);
+        return new SocialAuthenticationResult(userAccount.getId(), tokenPair, isNewAccount);
     }
 }
