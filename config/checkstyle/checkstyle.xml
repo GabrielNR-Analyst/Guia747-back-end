@@ -53,7 +53,6 @@
         <module name="EqualsHashCode"/>
         <module name="ExplicitInitialization"/>
         <module name="FallThrough"/>
-        <module name="IllegalCatch"/>
         <module name="IllegalInstantiation"/>
         <module name="IllegalType"/>
         <module name="InnerTypeLast"/>
@@ -96,9 +95,6 @@
         <module name="OverloadMethodsDeclarationOrder"/>
         <module name="ParameterNumber">
             <property name="max" value="7"/>
-        </module>
-        <module name="ReturnCount">
-            <property name="max" value="2"/>
         </module>
         <module name="TodoComment"/>
         <module name="TrailingComment"/>
