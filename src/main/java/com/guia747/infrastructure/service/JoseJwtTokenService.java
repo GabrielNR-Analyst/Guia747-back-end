@@ -9,6 +9,7 @@ import com.guia747.domain.entity.UserAccount;
 import com.guia747.domain.vo.TokenPair;
 import com.guia747.infrastructure.config.properties.AppProperties;
 import com.guia747.infrastructure.config.properties.AppSecurityProperties.JwtProperties;
+import com.guia747.infrastructure.security.SecureTokenGenerator;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -26,9 +27,11 @@ public class JoseJwtTokenService implements JwtTokenService {
     private final JWSSigner signer;
     private final JWSVerifier verifier;
     private final JwtProperties jwtProperties;
+    private final SecureTokenGenerator tokenGenerator;
 
-    public JoseJwtTokenService(AppProperties appProperties) {
+    public JoseJwtTokenService(AppProperties appProperties, SecureTokenGenerator tokenGenerator) {
         this.jwtProperties = appProperties.security().jwt();
+        this.tokenGenerator = tokenGenerator;
 
         try {
             // Ensure secret is at least 32 bytes for HS256
@@ -46,14 +49,16 @@ public class JoseJwtTokenService implements JwtTokenService {
             Instant now = Instant.now();
             Instant accessTokenExpiry = now.plus(jwtProperties.accessTokenExpiration());
 
+            String jwtId = UUID.randomUUID().toString();
             JWTClaimsSet accessTokenClaims = new JWTClaimsSet.Builder()
+                    .jwtID(jwtId)
                     .subject(userAccount.getId().toString())
                     .issueTime(Date.from(now))
                     .expirationTime(Date.from(accessTokenExpiry))
                     .build();
 
             String accessToken = createSignedToken(accessTokenClaims);
-            String refreshToken = "";
+            String refreshToken = tokenGenerator.generateToken();
 
             return new TokenPair(
                     accessToken,

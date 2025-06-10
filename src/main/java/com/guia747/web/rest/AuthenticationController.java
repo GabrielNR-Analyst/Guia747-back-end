@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.guia747.application.dto.SocialAuthenticationResult;
 import com.guia747.application.usecase.AuthenticateWithSocialProviderUseCase;
+import com.guia747.infrastructure.security.SecureRefreshTokenCookieService;
 import com.guia747.web.dto.AuthenticationResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,9 +27,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class AuthenticationController {
 
     private final AuthenticateWithSocialProviderUseCase authenticateWithSocialProviderUseCase;
+    private final SecureRefreshTokenCookieService refreshTokenCookieService;
 
-    public AuthenticationController(AuthenticateWithSocialProviderUseCase authenticateWithSocialProviderUseCase) {
+    public AuthenticationController(
+            AuthenticateWithSocialProviderUseCase authenticateWithSocialProviderUseCase,
+            SecureRefreshTokenCookieService refreshTokenCookieService
+    ) {
         this.authenticateWithSocialProviderUseCase = authenticateWithSocialProviderUseCase;
+        this.refreshTokenCookieService = refreshTokenCookieService;
     }
 
     @Operation(
@@ -78,6 +84,9 @@ public class AuthenticationController {
     ) {
         String accessToken = authorizationHeader.substring("Bearer ".length());
         SocialAuthenticationResult result = authenticateWithSocialProviderUseCase.execute(accessToken);
+
+        refreshTokenCookieService.setRefreshTokenCookie(httpResponse, result.tokenPair().refreshToken(),
+                result.tokenPair().refreshTokenExpirationInSeconds());
 
         var response = new AuthenticationResponse(
                 result.userId(),
