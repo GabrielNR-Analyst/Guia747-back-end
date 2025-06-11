@@ -11,6 +11,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -76,6 +77,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleMissingRequestHeaderException(MissingRequestHeaderException ex) {
         String headerName = ex.getHeaderName();
         var message = String.format("O cabeçalho HTTP obrigatório '%s' não foi fornecido na requisição.", headerName);
+        var response = ApiErrorResponse.createNew(HttpStatus.BAD_REQUEST, message);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(MissingRequestCookieException.class)
+    public ResponseEntity<Object> handleMissing(MissingRequestCookieException ex) {
+        String cookieName = ex.getCookieName();
+        var message = String.format("O cookie obrigatório '%s' não foi fornecido na requisição.", cookieName);
         var response = ApiErrorResponse.createNew(HttpStatus.BAD_REQUEST, message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
