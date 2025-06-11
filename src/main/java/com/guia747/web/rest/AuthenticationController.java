@@ -1,19 +1,19 @@
 package com.guia747.web.rest;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpHeaders;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.guia747.application.dto.SocialAuthenticationResult;
 import com.guia747.application.usecase.AuthenticateWithSocialProviderUseCase;
 import com.guia747.infrastructure.security.SecureRefreshTokenCookieService;
 import com.guia747.web.dto.AuthenticationResponse;
+import com.guia747.web.dto.SocialAuthenticationRequest;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -38,7 +38,7 @@ public class AuthenticationController {
 
     @Operation(
             summary = "Authenticate with Google",
-            description = "Performs user authentication using a Google ID token obtained from a client-side login. " +
+            description = "Performs user authentication using a Google ID providerToken obtained from a client-side login. " +
                     "This endpoint will either log in an existing user or create a new account if the user is " +
                     "authenticating for the first time. It returns the application's internal JWT"
     )
@@ -55,28 +55,22 @@ public class AuthenticationController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "The Authorization header is missing, malformed, or does not contain a Bearer token",
+                    description = "The Authorization header is missing, malformed, or does not contain a Bearer providerToken",
                     content = @Content
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "The provided Google ID token is invalid or expired. " +
-                            "The social provider rejected the token.",
+                    description = "The provided Google ID providerToken is invalid or expired. " +
+                            "The social provider rejected the providerToken.",
                     content = @Content
             )
     })
     @PostMapping("/google/authenticate")
     public ResponseEntity<AuthenticationResponse> loginWithGoogle(
-            @Parameter(
-                    description = "The Google ID token, prefixed with 'Bearer '.",
-                    required = true,
-                    example = "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjY..."
-            )
-            @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader,
+            @Valid @RequestBody SocialAuthenticationRequest request,
             HttpServletResponse httpResponse
     ) {
-        String accessToken = authorizationHeader.substring("Bearer ".length());
-        SocialAuthenticationResult result = authenticateWithSocialProviderUseCase.execute(accessToken);
+        SocialAuthenticationResult result = authenticateWithSocialProviderUseCase.execute(request.providerToken());
 
         refreshTokenCookieService.setRefreshTokenCookie(httpResponse, result.tokenPair().refreshToken(),
                 result.tokenPair().refreshTokenTtl().toSeconds());
