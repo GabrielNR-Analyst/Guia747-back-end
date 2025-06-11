@@ -7,14 +7,12 @@ import java.util.UUID;
 public class RefreshTokenSession {
 
     private final String refreshToken;
-    private final String jwtId;
     private final UUID accountId;
     private final Instant issuedAt;
     private final Instant expiresAt;
 
-    public RefreshTokenSession(String refreshToken, String jwtId, UUID accountId, Duration ttl) {
+    public RefreshTokenSession(String refreshToken, UUID accountId, Duration ttl) {
         this.refreshToken = refreshToken;
-        this.jwtId = jwtId;
         this.accountId = accountId;
         this.issuedAt = Instant.now();
         this.expiresAt = this.issuedAt.plus(ttl);
@@ -22,10 +20,6 @@ public class RefreshTokenSession {
 
     public String getRefreshToken() {
         return refreshToken;
-    }
-
-    public String getJwtId() {
-        return jwtId;
     }
 
     public UUID getAccountId() {

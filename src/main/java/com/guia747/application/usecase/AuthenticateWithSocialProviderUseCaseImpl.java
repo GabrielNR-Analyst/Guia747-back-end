@@ -4,7 +4,9 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.guia747.application.dto.SocialAuthenticationResult;
+import com.guia747.domain.entity.RefreshTokenSession;
 import com.guia747.domain.entity.UserAccount;
+import com.guia747.domain.repository.RefreshTokenSessionRepository;
 import com.guia747.domain.repository.UserAccountRepository;
 import com.guia747.domain.service.SocialAuthenticationProvider;
 import com.guia747.domain.vo.SocialAuthenticationToken;
@@ -18,14 +20,18 @@ public class AuthenticateWithSocialProviderUseCaseImpl implements AuthenticateWi
     private final SocialAuthenticationProvider socialAuthenticationProvider;
     private final UserAccountRepository userAccountRepository;
     private final JwtTokenService jwtTokenService;
+    private final RefreshTokenSessionRepository refreshTokenRepository;
 
     public AuthenticateWithSocialProviderUseCaseImpl(
             SocialAuthenticationProvider socialAuthenticationProvider,
             UserAccountRepository userAccountRepository,
-            JwtTokenService jwtTokenService) {
+            JwtTokenService jwtTokenService,
+            RefreshTokenSessionRepository refreshTokenRepository
+    ) {
         this.socialAuthenticationProvider = socialAuthenticationProvider;
         this.userAccountRepository = userAccountRepository;
         this.jwtTokenService = jwtTokenService;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
     @Override
@@ -41,6 +47,13 @@ public class AuthenticateWithSocialProviderUseCaseImpl implements AuthenticateWi
         boolean isNewAccount = existingAccount.isEmpty();
 
         TokenPair tokenPair = jwtTokenService.generateTokenPair(userAccount.getId());
+        RefreshTokenSession session = new RefreshTokenSession(
+                tokenPair.refreshToken(),
+                userAccount.getId(),
+                tokenPair.refreshTokenTtl()
+        );
+        refreshTokenRepository.save(session);
+
         return new SocialAuthenticationResult(userAccount.getId(), tokenPair, isNewAccount);
     }
 }

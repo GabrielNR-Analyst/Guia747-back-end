@@ -5,7 +5,6 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
-import com.guia747.domain.entity.RefreshTokenSession;
 import com.guia747.domain.repository.RefreshTokenSessionRepository;
 import com.guia747.domain.vo.TokenPair;
 import com.guia747.infrastructure.config.properties.AppProperties;
@@ -29,7 +28,6 @@ public class JoseJwtTokenService implements JwtTokenService {
     private final JWSVerifier verifier;
     private final JwtProperties jwtProperties;
     private final SecureTokenGenerator tokenGenerator;
-    private final RefreshTokenSessionRepository refreshTokenRepository;
 
     public JoseJwtTokenService(
             AppProperties appProperties,
@@ -38,7 +36,6 @@ public class JoseJwtTokenService implements JwtTokenService {
     ) {
         this.jwtProperties = appProperties.security().jwt();
         this.tokenGenerator = tokenGenerator;
-        this.refreshTokenRepository = refreshTokenRepository;
 
         try {
             // Ensure secret is at least 32 bytes for HS256
@@ -66,14 +63,6 @@ public class JoseJwtTokenService implements JwtTokenService {
 
             String accessToken = createSignedToken(accessTokenClaims);
             String refreshToken = tokenGenerator.generateToken();
-
-            RefreshTokenSession session = new RefreshTokenSession(
-                    refreshToken,
-                    jwtId,
-                    accountId,
-                    jwtProperties.refreshTokenExpiration()
-            );
-            refreshTokenRepository.save(session);
 
             return new TokenPair(
                     accessToken,
