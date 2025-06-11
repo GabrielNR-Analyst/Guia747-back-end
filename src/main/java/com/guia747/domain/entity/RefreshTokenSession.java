@@ -1,15 +1,23 @@
 package com.guia747.domain.entity;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
 
-public class RefreshTokenSession {
+public class RefreshTokenSession implements Serializable {
 
-    private final String refreshToken;
-    private final UUID accountId;
-    private final Instant issuedAt;
-    private final Instant expiresAt;
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private String refreshToken;
+    private UUID accountId;
+    private Instant issuedAt;
+    private Instant expiresAt;
+
+    protected RefreshTokenSession() {
+    }
 
     public RefreshTokenSession(String refreshToken, UUID accountId, Duration ttl) {
         this.refreshToken = refreshToken;

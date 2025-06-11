@@ -4,16 +4,21 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.guia747.application.dto.SocialAuthenticationResult;
 import com.guia747.application.usecase.AuthenticateWithSocialProviderUseCase;
+import com.guia747.application.usecase.RefreshAccessTokenUseCase;
+import com.guia747.domain.vo.TokenPair;
 import com.guia747.infrastructure.security.SecureRefreshTokenCookieService;
 import com.guia747.web.dto.AuthenticationResponse;
+import com.guia747.web.dto.RefreshTokenResponse;
 import com.guia747.web.dto.SocialAuthenticationRequest;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,13 +32,16 @@ public class AuthenticationController {
 
     private final AuthenticateWithSocialProviderUseCase authenticateWithSocialProviderUseCase;
     private final SecureRefreshTokenCookieService refreshTokenCookieService;
+    private final RefreshAccessTokenUseCase refreshAccessTokenUseCase;
 
     public AuthenticationController(
             AuthenticateWithSocialProviderUseCase authenticateWithSocialProviderUseCase,
-            SecureRefreshTokenCookieService refreshTokenCookieService
+            SecureRefreshTokenCookieService refreshTokenCookieService,
+            RefreshAccessTokenUseCase refreshAccessTokenUseCase
     ) {
         this.authenticateWithSocialProviderUseCase = authenticateWithSocialProviderUseCase;
         this.refreshTokenCookieService = refreshTokenCookieService;
+        this.refreshAccessTokenUseCase = refreshAccessTokenUseCase;
     }
 
     @Operation(
@@ -89,5 +97,51 @@ public class AuthenticationController {
 
         HttpStatus status = result.isNewAccount() ? HttpStatus.CREATED : HttpStatus.OK;
         return ResponseEntity.status(status).body(response);
+    }
+
+    @Operation(
+            summary = "Refresh the access token",
+            description = "Refreshes an expired access token using a valid refresh token"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully refreshed tokens",
+                    content = @Content(
+                            schema = @Schema(implementation = RefreshTokenResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Invalid or expired refresh token",
+                    content = @Content
+            )
+    })
+    @PostMapping("/refresh")
+    public ResponseEntity<RefreshTokenResponse> refreshToken(
+            @Parameter(description = """
+                    Refresh token stored in secure HTTP-only cookie.
+                    
+                    This cookie is automatically sent by the browser and contains the refresh token
+                    needed to generate a new access token.
+                    """)
+            @CookieValue("_rt") String refreshToken,
+            HttpServletResponse httpResponse
+    ) {
+        TokenPair tokenPair = refreshAccessTokenUseCase.execute(refreshToken);
+
+        refreshTokenCookieService.setRefreshTokenCookie(
+                httpResponse,
+                tokenPair.refreshToken(),
+                tokenPair.refreshTokenTtl().toSeconds()
+        );
+
+        RefreshTokenResponse response = new RefreshTokenResponse(
+                tokenPair.accessToken(),
+                tokenPair.accessTokenTtl().toSeconds(),
+                "Bearer"
+        );
+
+        return ResponseEntity.ok(response);
     }
 }

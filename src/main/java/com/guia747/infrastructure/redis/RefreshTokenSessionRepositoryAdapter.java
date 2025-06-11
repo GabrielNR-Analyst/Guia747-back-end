@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.Optional;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guia747.domain.entity.RefreshTokenSession;
 import com.guia747.domain.repository.RefreshTokenSessionRepository;
 
@@ -12,9 +13,11 @@ public class RefreshTokenSessionRepositoryAdapter implements RefreshTokenSession
 
     private static final String TOKEN_KEY_PREFIX = "refresh_token:";
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ObjectMapper objectMapper;
 
-    public RefreshTokenSessionRepositoryAdapter(RedisTemplate<String, Object> redisTemplate) {
+    public RefreshTokenSessionRepositoryAdapter(RedisTemplate<String, Object> redisTemplate, ObjectMapper objectMapper) {
         this.redisTemplate = redisTemplate;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -28,12 +31,14 @@ public class RefreshTokenSessionRepositoryAdapter implements RefreshTokenSession
     @Override
     public Optional<RefreshTokenSession> findByToken(String token) {
         String tokenKey = TOKEN_KEY_PREFIX + token;
-
         Object value = redisTemplate.opsForValue().get(tokenKey);
-        if (value instanceof RefreshTokenSession session) {
-            return Optional.of(session);
-        }
+        RefreshTokenSession session = objectMapper.convertValue(value, RefreshTokenSession.class);
+        return Optional.ofNullable(session);
+    }
 
-        return Optional.empty();
+    @Override
+    public void deleteByToken(String token) {
+        String tokenKey = TOKEN_KEY_PREFIX + token;
+        redisTemplate.delete(tokenKey);
     }
 }

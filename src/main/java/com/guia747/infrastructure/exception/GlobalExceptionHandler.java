@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.guia747.domain.exception.InvalidSocialAuthenticationTokenException;
 import com.guia747.domain.exception.SocialAuthenticationException;
 import com.guia747.domain.exception.SocialProviderAlreadyLinkedException;
+import com.guia747.domain.exception.UserAccountNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -108,5 +109,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         }
         var response = ApiErrorResponse.createNew(HttpStatus.BAD_REQUEST, ex.getMessage());
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(UserAccountNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleUserAccountNotFoundException(UserAccountNotFoundException ex) {
+        var response = ApiErrorResponse.createNew(HttpStatus.NOT_FOUND, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 }

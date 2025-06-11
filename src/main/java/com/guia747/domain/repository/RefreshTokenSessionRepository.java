@@ -8,4 +8,6 @@ public interface RefreshTokenSessionRepository {
     void save(RefreshTokenSession session);
 
     Optional<RefreshTokenSession> findByToken(String token);
+
+    void deleteByToken(String token);
 }

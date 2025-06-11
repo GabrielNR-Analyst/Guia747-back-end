@@ -1,6 +1,7 @@
 package com.guia747.infrastructure.persistence.repository;
 
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.stereotype.Repository;
 import com.guia747.domain.entity.UserAccount;
 import com.guia747.domain.repository.UserAccountRepository;
@@ -33,5 +34,10 @@ public class UserAccountRepositoryAdapter implements UserAccountRepository {
     @Override
     public Optional<UserAccount> findByGoogleId(String googleId) {
         return jpaRepository.findByGoogleId(googleId).map(mapper::toDomain);
+    }
+
+    @Override
+    public Optional<UserAccount> findById(UUID id) {
+        return jpaRepository.findById(id).map(mapper::toDomain);
     }
 }
