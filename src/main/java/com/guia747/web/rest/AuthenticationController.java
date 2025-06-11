@@ -45,23 +45,28 @@ public class AuthenticationController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Successfully authenticated an existing user.",
+                    description = "Successfully authenticated an existing user",
                     content = @Content(schema = @Schema(implementation = AuthenticationResponse.class))
             ),
             @ApiResponse(
                     responseCode = "201",
-                    description = "Successfully authenticated and created a new user account.",
+                    description = "Successfully authenticated and created a new user account",
                     content = @Content(schema = @Schema(implementation = AuthenticationResponse.class))
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "The Authorization header is missing, malformed, or does not contain a Bearer providerToken",
+                    description = "The Authorization header is missing, malformed, or does not contain a Bearer token",
                     content = @Content
             ),
             @ApiResponse(
                     responseCode = "401",
                     description = "The provided Google ID providerToken is invalid or expired. " +
                             "The social provider rejected the providerToken.",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Google account already linked to another user or account conflict detected",
                     content = @Content
             )
     })
