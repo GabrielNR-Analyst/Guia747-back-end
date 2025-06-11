@@ -86,12 +86,12 @@ public class AuthenticationController {
         SocialAuthenticationResult result = authenticateWithSocialProviderUseCase.execute(accessToken);
 
         refreshTokenCookieService.setRefreshTokenCookie(httpResponse, result.tokenPair().refreshToken(),
-                result.tokenPair().refreshTokenExpirationInSeconds());
+                result.tokenPair().refreshTokenTtl().toSeconds());
 
         var response = new AuthenticationResponse(
                 result.userId(),
                 result.tokenPair().accessToken(),
-                result.tokenPair().accessTokenExpirationInSeconds(),
+                result.tokenPair().accessTokenTtl().toSeconds(),
                 "Bearer"
         );
 

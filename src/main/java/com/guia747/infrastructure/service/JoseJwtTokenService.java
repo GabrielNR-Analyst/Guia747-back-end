@@ -78,8 +78,8 @@ public class JoseJwtTokenService implements JwtTokenService {
             return new TokenPair(
                     accessToken,
                     refreshToken,
-                    jwtProperties.accessTokenExpiration().toSeconds(),
-                    jwtProperties.refreshTokenExpiration().toSeconds()
+                    jwtProperties.accessTokenExpiration(),
+                    jwtProperties.refreshTokenExpiration()
             );
         } catch (JOSEException e) {
             throw new RuntimeException(e);
