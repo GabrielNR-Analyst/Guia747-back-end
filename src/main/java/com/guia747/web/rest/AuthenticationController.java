@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.guia747.application.dto.SocialAuthenticationResult;
 import com.guia747.application.usecase.AuthenticateWithSocialProviderUseCase;
+import com.guia747.application.usecase.LogoutUserUseCase;
 import com.guia747.application.usecase.RefreshAccessTokenUseCase;
 import com.guia747.domain.vo.TokenPair;
 import com.guia747.infrastructure.security.SecureRefreshTokenCookieService;
@@ -31,17 +32,19 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class AuthenticationController {
 
     private final AuthenticateWithSocialProviderUseCase authenticateWithSocialProviderUseCase;
-    private final SecureRefreshTokenCookieService refreshTokenCookieService;
+    private final SecureRefreshTokenCookieService cookieService;
     private final RefreshAccessTokenUseCase refreshAccessTokenUseCase;
+    private final LogoutUserUseCase logoutUserUseCase;
 
     public AuthenticationController(
             AuthenticateWithSocialProviderUseCase authenticateWithSocialProviderUseCase,
-            SecureRefreshTokenCookieService refreshTokenCookieService,
-            RefreshAccessTokenUseCase refreshAccessTokenUseCase
-    ) {
+            SecureRefreshTokenCookieService cookieService,
+            RefreshAccessTokenUseCase refreshAccessTokenUseCase,
+            LogoutUserUseCase logoutUserUseCase) {
         this.authenticateWithSocialProviderUseCase = authenticateWithSocialProviderUseCase;
-        this.refreshTokenCookieService = refreshTokenCookieService;
+        this.cookieService = cookieService;
         this.refreshAccessTokenUseCase = refreshAccessTokenUseCase;
+        this.logoutUserUseCase = logoutUserUseCase;
     }
 
     @Operation(
@@ -85,7 +88,7 @@ public class AuthenticationController {
     ) {
         SocialAuthenticationResult result = authenticateWithSocialProviderUseCase.execute(request.providerToken());
 
-        refreshTokenCookieService.setRefreshTokenCookie(httpResponse, result.tokenPair().refreshToken(),
+        cookieService.setRefreshTokenCookie(httpResponse, result.tokenPair().refreshToken(),
                 result.tokenPair().refreshTokenTtl().toSeconds());
 
         var response = new AuthenticationResponse(
@@ -130,7 +133,7 @@ public class AuthenticationController {
     ) {
         TokenPair tokenPair = refreshAccessTokenUseCase.execute(refreshToken);
 
-        refreshTokenCookieService.setRefreshTokenCookie(
+        cookieService.setRefreshTokenCookie(
                 httpResponse,
                 tokenPair.refreshToken(),
                 tokenPair.refreshTokenTtl().toSeconds()
@@ -143,5 +146,20 @@ public class AuthenticationController {
         );
 
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "Logout",
+            description = "Clear refresh token cookie and invalidate authentication session"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Logout successful"),
+            @ApiResponse(responseCode = "400", description = "Missing refresh token cookie")
+    })
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@CookieValue("_rt") String refreshToken, HttpServletResponse httpResponse) {
+        logoutUserUseCase.execute(refreshToken);
+        cookieService.clearRefreshTokenCookie(httpResponse);
+        return ResponseEntity.noContent().build();
     }
 }

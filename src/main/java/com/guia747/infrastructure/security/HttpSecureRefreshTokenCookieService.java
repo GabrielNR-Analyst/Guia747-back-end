@@ -19,12 +19,18 @@ public class HttpSecureRefreshTokenCookieService implements SecureRefreshTokenCo
     @Override
     public void setRefreshTokenCookie(HttpServletResponse response, String refreshToken, long maxAgeSeconds) {
         // Set refresh token cookie
-        var tokenCookie = createSecureCookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, maxAgeSeconds);
+        var tokenCookie = createSecureCookie(refreshToken, maxAgeSeconds);
         response.addCookie(tokenCookie);
     }
 
-    private Cookie createSecureCookie(String name, String value, long maxAgeSeconds) {
-        var cookie = new Cookie(name, value);
+    @Override
+    public void clearRefreshTokenCookie(HttpServletResponse response) {
+        var tokenCookie = createSecureCookie("", 0);
+        response.addCookie(tokenCookie);
+    }
+
+    private Cookie createSecureCookie(String value, long maxAgeSeconds) {
+        var cookie = new Cookie(HttpSecureRefreshTokenCookieService.REFRESH_TOKEN_COOKIE_NAME, value);
         cookie.setHttpOnly(true);
         cookie.setSecure(appProperties.security().cookie().secure());
         cookie.setMaxAge((int) maxAgeSeconds);
