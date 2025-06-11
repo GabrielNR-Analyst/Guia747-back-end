@@ -20,6 +20,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import com.guia747.domain.exception.InvalidSocialAuthenticationTokenException;
 import com.guia747.domain.exception.SocialAuthenticationException;
+import com.guia747.domain.exception.SocialProviderAlreadyLinkedException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -101,6 +102,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         if (ex instanceof InvalidSocialAuthenticationTokenException) {
             var response = ApiErrorResponse.createNew(HttpStatus.UNAUTHORIZED, ex.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        } else if (ex instanceof SocialProviderAlreadyLinkedException) {
+            var response = ApiErrorResponse.createNew(HttpStatus.CONFLICT, ex.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
         }
         var response = ApiErrorResponse.createNew(HttpStatus.BAD_REQUEST, ex.getMessage());
         return ResponseEntity.badRequest().body(response);

@@ -23,6 +23,10 @@ public class UserAccount extends AggregateRoot {
         return account;
     }
 
+    public void reconnectSocialProfile(SocialUserProfile socialProfile) {
+        this.googleId = socialProfile.providerId();
+    }
+
     public String getEmail() {
         return email;
     }

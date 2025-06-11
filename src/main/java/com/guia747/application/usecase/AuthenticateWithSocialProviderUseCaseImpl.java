@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.guia747.application.dto.SocialAuthenticationResult;
 import com.guia747.domain.entity.RefreshTokenSession;
 import com.guia747.domain.entity.UserAccount;
+import com.guia747.domain.exception.SocialProviderAlreadyLinkedException;
 import com.guia747.domain.repository.RefreshTokenSessionRepository;
 import com.guia747.domain.repository.UserAccountRepository;
 import com.guia747.domain.service.SocialAuthenticationProvider;
@@ -40,11 +41,8 @@ public class AuthenticateWithSocialProviderUseCaseImpl implements AuthenticateWi
         var authToken = new SocialAuthenticationToken(authenticationToken);
         SocialUserProfile socialUserProfile = socialAuthenticationProvider.validateTokenAndExtractProfile(authToken);
 
-        Optional<UserAccount> existingAccount = userAccountRepository.findByGoogleId(socialUserProfile.providerId());
-        UserAccount userAccount = existingAccount.orElseGet(() ->
-                userAccountRepository.save(UserAccount.createFromSocialProfile(socialUserProfile))
-        );
-        boolean isNewAccount = existingAccount.isEmpty();
+        AuthenticationResult authResult = findOrCreateUserAccount(socialUserProfile);
+        UserAccount userAccount = authResult.userAccount();
 
         TokenPair tokenPair = jwtTokenService.generateTokenPair(userAccount.getId());
         RefreshTokenSession session = new RefreshTokenSession(
@@ -54,6 +52,43 @@ public class AuthenticateWithSocialProviderUseCaseImpl implements AuthenticateWi
         );
         refreshTokenRepository.save(session);
 
-        return new SocialAuthenticationResult(userAccount.getId(), tokenPair, isNewAccount);
+        return new SocialAuthenticationResult(userAccount.getId(), tokenPair, authResult.isNewAccount());
+    }
+
+    private AuthenticationResult findOrCreateUserAccount(SocialUserProfile socialProfile) {
+        // Try to find by social provider ID (exact match)
+        Optional<UserAccount> existingBySocial = userAccountRepository.findByGoogleId(socialProfile.providerId());
+        if (existingBySocial.isPresent()) {
+            return new AuthenticationResult(existingBySocial.get(), false);
+        }
+
+        // Try to find by email (reconnection scenario)
+        Optional<UserAccount> existingByEmail = userAccountRepository.findByEmail(socialProfile.email());
+        if (existingByEmail.isPresent()) {
+            UserAccount existing = existingByEmail.get();
+
+            // Check if this provider is already linked to a DIFFERENT account
+            var accountWithSameProvider = userAccountRepository.findByGoogleId(socialProfile.providerId());
+            if (accountWithSameProvider.isPresent()
+                    && !accountWithSameProvider.get().getGoogleId().equals(existing.getGoogleId())) {
+                throw new SocialProviderAlreadyLinkedException("google");
+            }
+
+            // Update the existing account with new provider
+            existing.reconnectSocialProfile(socialProfile);
+            userAccountRepository.save(existing);
+
+            return new AuthenticationResult(existing, false);
+        }
+
+        // NEW USER: Create completely new account
+        UserAccount newAccount = UserAccount.createFromSocialProfile(socialProfile);
+        UserAccount savedAccount = userAccountRepository.save(newAccount);
+
+        return new AuthenticationResult(savedAccount, true);
+    }
+
+    record AuthenticationResult(UserAccount userAccount, boolean isNewAccount) {
+
     }
 }
