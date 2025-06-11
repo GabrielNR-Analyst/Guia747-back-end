@@ -3,7 +3,6 @@ package com.guia747.web.rest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -47,18 +46,12 @@ public class AuthenticationController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Successfully authenticated an existing user.",
-                    content = @Content(schema = @Schema(
-                            implementation = AuthenticationResponse.class,
-                            contentMediaType = MediaType.APPLICATION_JSON_VALUE
-                    ))
+                    content = @Content(schema = @Schema(implementation = AuthenticationResponse.class))
             ),
             @ApiResponse(
                     responseCode = "201",
                     description = "Successfully authenticated and created a new user account.",
-                    content = @Content(schema = @Schema(
-                            implementation = AuthenticationResponse.class,
-                            contentMediaType = MediaType.APPLICATION_JSON_VALUE
-                    ))
+                    content = @Content(schema = @Schema(implementation = AuthenticationResponse.class))
             ),
             @ApiResponse(
                     responseCode = "400",
