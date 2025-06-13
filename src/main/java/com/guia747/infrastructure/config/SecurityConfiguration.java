@@ -19,7 +19,10 @@ public class SecurityConfiguration {
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .formLogin(AbstractHttpConfigurer::disable).httpBasic(AbstractHttpConfigurer::disable);
+                .formLogin(AbstractHttpConfigurer::disable).httpBasic(AbstractHttpConfigurer::disable)
+                // Don't use OAuth2 login - we handle it manually
+                .oauth2Login(AbstractHttpConfigurer::disable);
+
         return http.build();
     }
 
