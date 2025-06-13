@@ -43,16 +43,12 @@ public class SpringOAuth2AuthorizationService implements OAuth2AuthorizationServ
     }
 
     private String buildAuthorizationUrl(ClientRegistration clientRegistration, String state, String codeChallenge) {
-        String redirectUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(clientRegistration.getRedirectUri())
-                .toUriString();
-
         String scopesStr = String.join(" ", clientRegistration.getScopes());
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(
                         clientRegistration.getProviderDetails().getAuthorizationUri())
                 .queryParam("client_id", clientRegistration.getClientId())
                 .queryParam("response_type", "code")
-                .queryParam("redirect_uri", redirectUri)
+                .queryParam("redirect_uri", clientRegistration.getRedirectUri())
                 .queryParam("scope", URLEncoder.encode(scopesStr, StandardCharsets.UTF_8))
                 .queryParam("state", URLEncoder.encode(state, StandardCharsets.UTF_8))
                 .queryParam("code_challenge", URLEncoder.encode(codeChallenge, StandardCharsets.UTF_8))
