@@ -32,7 +32,10 @@ public class DefaultCompleteOAuth2AuthorizationUseCase implements CompleteOAuth2
             throw new OAuth2SecurityContextException("State mismatch in security context");
         }
 
-        OAuth2TokenExchangeResponse response = oauth2TokenExchangeService.exchangeAuthorizationCode(
+        OAuth2TokenExchangeResponse tokenResponse = oauth2TokenExchangeService.exchangeAuthorizationCode(
                 command.providerName(), command.authorizationCode(), command.state(), securityContext.pkceVerifier());
+
+        OAuth2UserInfo oauth2UserInfo = oauth2TokenExchangeService.fetchUserInfo(command.providerName(),
+                tokenResponse.getAccessToken());
     }
 }
