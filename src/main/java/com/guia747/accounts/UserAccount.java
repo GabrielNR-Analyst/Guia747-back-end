@@ -1,8 +1,13 @@
 package com.guia747.accounts;
 
+import java.io.Serial;
+import java.io.Serializable;
 import com.guia747.authentication.OAuth2UserProfile;
 
-public class UserAccount extends Entity {
+public class UserAccount extends Entity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private final String name;
     private final String email;

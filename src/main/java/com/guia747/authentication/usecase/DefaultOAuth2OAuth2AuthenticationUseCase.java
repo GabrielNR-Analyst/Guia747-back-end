@@ -23,10 +23,10 @@ public class DefaultOAuth2OAuth2AuthenticationUseCase implements OAuth2Authentic
     }
 
     @Override
-    public void execute(OAuth2AuthenticationRequest request) {
+    public UserAccount execute(OAuth2AuthenticationRequest request) {
         String accessToken = oauth2TokenService.exchangeCodeForAccessToken(request.code());
         OAuth2UserProfile oauth2UserProfile = oauth2UserService.getUserProfile(accessToken);
 
-        UserAccount userAccount = userAccountService.findOrCreateFromOAuth2(oauth2UserProfile);
+        return userAccountService.findOrCreateFromOAuth2(oauth2UserProfile);
     }
 }

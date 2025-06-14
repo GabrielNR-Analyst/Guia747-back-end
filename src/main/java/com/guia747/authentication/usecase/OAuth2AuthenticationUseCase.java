@@ -1,8 +1,9 @@
 package com.guia747.authentication.usecase;
 
+import com.guia747.accounts.UserAccount;
 import com.guia747.authentication.OAuth2AuthenticationRequest;
 
 public interface OAuth2AuthenticationUseCase {
 
-    void execute(OAuth2AuthenticationRequest request);
+    UserAccount execute(OAuth2AuthenticationRequest request);
 }
