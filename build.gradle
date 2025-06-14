@@ -30,6 +30,8 @@ dependencyManagement {
 dependencies {
     implementation 'org.mapstruct:mapstruct'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.session:spring-session-jdbc'
+    implementation 'org.springframework.session:spring-session-data-redis'
     annotationProcessor 'org.mapstruct:mapstruct-processor'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.security:spring-security-test'
