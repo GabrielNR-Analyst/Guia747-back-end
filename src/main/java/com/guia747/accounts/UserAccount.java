@@ -18,7 +18,7 @@ public class UserAccount extends Entity {
         this.providerName = providerName;
     }
 
-    public static UserAccount of(OAuth2UserProfile userProfile) {
+    public static UserAccount createFromOAuth2Profile(OAuth2UserProfile userProfile) {
         return new UserAccount(userProfile.getName(), userProfile.getEmail(), userProfile.getPictureUrl(),
                 userProfile.getProviderId(), userProfile.getProviderName());
     }
