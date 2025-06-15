@@ -1,13 +1,7 @@
 package com.guia747.authentication.controller;
 
-import java.util.Collections;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +11,6 @@ import com.guia747.accounts.domain.UserAccount;
 import com.guia747.accounts.dto.UserAccountDetailsResponse;
 import com.guia747.authentication.dto.OAuth2AuthenticationRequest;
 import com.guia747.authentication.usecase.OAuth2AuthenticationUseCase;
-import com.guia747.infrastructure.security.OAuth2AuthenticationToken;
-import com.guia747.infrastructure.security.OAuth2UserPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,16 +20,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/oauth2")
-@Tag(name = "OAuth2 endpoints", description = "Base URL for OAuth2 authentication endpoints")
+@Tag(name = "Authentication", description = "Base URL for authentication endpoints")
 public class OAuth2AuthenticationController {
 
     private final OAuth2AuthenticationUseCase oauth2AuthenticationUseCase;
-    private final SecurityContextRepository securityContextRepository;
 
-    public OAuth2AuthenticationController(OAuth2AuthenticationUseCase oauth2AuthenticationUseCase,
-            SecurityContextRepository securityContextRepository) {
+    public OAuth2AuthenticationController(OAuth2AuthenticationUseCase oauth2AuthenticationUseCase) {
         this.oauth2AuthenticationUseCase = oauth2AuthenticationUseCase;
-        this.securityContextRepository = securityContextRepository;
     }
 
     @Operation(
@@ -52,20 +41,8 @@ public class OAuth2AuthenticationController {
     })
     @PostMapping("/loginWithGoogle")
     public ResponseEntity<UserAccountDetailsResponse> loginWithGoogle(
-            @Valid @RequestBody OAuth2AuthenticationRequest request,
-            HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+            @Valid @RequestBody OAuth2AuthenticationRequest request) {
         UserAccount userAccount = oauth2AuthenticationUseCase.execute(request);
-
-        OAuth2UserPrincipal principal = new OAuth2UserPrincipal(userAccount);
-        Authentication authentication = new OAuth2AuthenticationToken(principal, Collections.emptyList());
-        authentication.setAuthenticated(true);
-
-        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-        securityContext.setAuthentication(authentication);
-        SecurityContextHolder.setContext(securityContext);
-
-        securityContextRepository.saveContext(securityContext, httpRequest, httpResponse);
-
         return ResponseEntity.ok(UserAccountDetailsResponse.fromUserAccount(userAccount));
     }
 }
