@@ -2,13 +2,12 @@ package com.guia747.authentication.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.guia747.accounts.domain.UserAccount;
 import com.guia747.accounts.dto.UserAccountDetailsResponse;
+import com.guia747.authentication.dto.AuthenticationResponse;
 import com.guia747.authentication.dto.OAuth2AuthenticationRequest;
 import com.guia747.authentication.usecase.OAuth2AuthenticationUseCase;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,9 +39,9 @@ public class OAuth2AuthenticationController {
             @ApiResponse(responseCode = "401", description = "Authentication failed", content = @Content)
     })
     @PostMapping("/loginWithGoogle")
-    public ResponseEntity<UserAccountDetailsResponse> loginWithGoogle(
+    public ResponseEntity<AuthenticationResponse> loginWithGoogle(
             @Valid @RequestBody OAuth2AuthenticationRequest request) {
-        UserAccount userAccount = oauth2AuthenticationUseCase.execute(request);
-        return ResponseEntity.ok(UserAccountDetailsResponse.fromUserAccount(userAccount));
+        AuthenticationResponse authenticationResponse = oauth2AuthenticationUseCase.execute(request);
+        return ResponseEntity.ok(authenticationResponse);
     }
 }

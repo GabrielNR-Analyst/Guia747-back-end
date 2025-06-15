@@ -38,6 +38,6 @@ public class NimbusJwtTokenService implements JwtTokenService {
         JwtEncoderParameters encoderParameters = JwtEncoderParameters.from(headers, claims);
         Jwt jwt = jwtEncoder.encode(encoderParameters);
 
-        return new JwtToken(jwt.getTokenValue(), expiration);
+        return new JwtToken(jwt.getTokenValue(), jwtProperties.getAccessTokenTtl());
     }
 }
