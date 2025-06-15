@@ -13,13 +13,8 @@ public class UserAccountController {
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            OAuth2UserPrincipal principal = (OAuth2UserPrincipal) authentication.getPrincipal();
-            UserAccount userAccount = principal.getUserAccount();
-
-            return ResponseEntity.ok(userAccount);
-        }
-
+        OAuth2UserPrincipal principal = (OAuth2UserPrincipal) authentication.getPrincipal();
+        UserAccount userAccount = principal.getUserAccount();
         return ResponseEntity.status(401).body("Not authenticated");
     }
 }

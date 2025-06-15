@@ -1,5 +1,8 @@
 package com.guia747.authentication;
 
+import lombok.Getter;
+
+@Getter
 public class OAuth2UserProfile {
 
     private final String providerId;
@@ -14,26 +17,6 @@ public class OAuth2UserProfile {
         this.email = builder.email;
         this.name = builder.name;
         this.pictureUrl = builder.pictureUrl;
-    }
-
-    public String getProviderId() {
-        return providerId;
-    }
-
-    public String getProviderName() {
-        return providerName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPictureUrl() {
-        return pictureUrl;
     }
 
     public static Builder withGoogleProvider(String providerId) {
