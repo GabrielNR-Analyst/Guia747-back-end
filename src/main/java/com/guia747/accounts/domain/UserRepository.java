@@ -1,4 +1,4 @@
-package com.guia747.accounts;
+package com.guia747.accounts.domain;
 
 import java.util.Optional;
 

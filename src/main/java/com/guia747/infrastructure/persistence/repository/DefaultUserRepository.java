@@ -2,8 +2,8 @@ package com.guia747.infrastructure.persistence.repository;
 
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
-import com.guia747.accounts.UserAccount;
-import com.guia747.accounts.UserRepository;
+import com.guia747.accounts.domain.UserAccount;
+import com.guia747.accounts.domain.UserRepository;
 import com.guia747.infrastructure.persistence.jpa.entity.UserJpaEntity;
 import com.guia747.infrastructure.persistence.jpa.repository.UserJpaRepository;
 import com.guia747.infrastructure.persistence.mapper.UserMapper;

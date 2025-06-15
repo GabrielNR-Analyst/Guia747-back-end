@@ -1,7 +1,8 @@
-package com.guia747.accounts;
+package com.guia747.accounts.dto;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import com.guia747.accounts.domain.UserAccount;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Response object containing user account details after successful authentication")

@@ -1,10 +1,10 @@
 package com.guia747.authentication.usecase;
 
 import org.springframework.stereotype.Service;
-import com.guia747.accounts.UserAccount;
-import com.guia747.accounts.UserAccountService;
-import com.guia747.authentication.OAuth2AuthenticationRequest;
-import com.guia747.authentication.OAuth2UserProfile;
+import com.guia747.accounts.domain.UserAccount;
+import com.guia747.accounts.service.UserAccountService;
+import com.guia747.authentication.dto.OAuth2AuthenticationRequest;
+import com.guia747.infrastructure.oauth2.OAuth2UserProfile;
 import com.guia747.infrastructure.oauth2.OAuth2TokenService;
 import com.guia747.infrastructure.oauth2.OAuth2UserService;
 

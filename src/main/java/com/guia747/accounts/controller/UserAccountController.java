@@ -1,10 +1,12 @@
-package com.guia747.accounts;
+package com.guia747.accounts.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.guia747.accounts.dto.UserAccountDetailsResponse;
+import com.guia747.accounts.domain.UserAccount;
 import com.guia747.infrastructure.security.OAuth2UserPrincipal;
 
 @RestController

@@ -1,4 +1,4 @@
-package com.guia747.authentication;
+package com.guia747.authentication.controller;
 
 import java.util.Collections;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.guia747.accounts.UserAccount;
-import com.guia747.accounts.UserAccountDetailsResponse;
+import com.guia747.accounts.domain.UserAccount;
+import com.guia747.accounts.dto.UserAccountDetailsResponse;
+import com.guia747.authentication.dto.OAuth2AuthenticationRequest;
 import com.guia747.authentication.usecase.OAuth2AuthenticationUseCase;
 import com.guia747.infrastructure.security.OAuth2AuthenticationToken;
 import com.guia747.infrastructure.security.OAuth2UserPrincipal;

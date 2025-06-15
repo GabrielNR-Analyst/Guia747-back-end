@@ -4,7 +4,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.guia747.authentication.OAuth2UserProfile;
 import com.guia747.infrastructure.config.OAuth2ProviderConfiguration;
 
 @Component

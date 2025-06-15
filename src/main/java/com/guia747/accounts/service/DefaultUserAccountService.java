@@ -1,9 +1,11 @@
-package com.guia747.accounts;
+package com.guia747.accounts.service;
 
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.guia747.authentication.OAuth2UserProfile;
+import com.guia747.accounts.domain.UserRepository;
+import com.guia747.accounts.domain.UserAccount;
+import com.guia747.infrastructure.oauth2.OAuth2UserProfile;
 
 @Service
 public class DefaultUserAccountService implements UserAccountService {

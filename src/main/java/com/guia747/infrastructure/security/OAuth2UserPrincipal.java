@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import com.guia747.accounts.UserAccount;
+import com.guia747.accounts.domain.UserAccount;
 
 public class OAuth2UserPrincipal implements UserDetails {
 

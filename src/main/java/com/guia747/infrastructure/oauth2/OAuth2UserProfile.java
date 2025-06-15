@@ -1,4 +1,4 @@
-package com.guia747.authentication;
+package com.guia747.infrastructure.oauth2;
 
 import lombok.Getter;
 

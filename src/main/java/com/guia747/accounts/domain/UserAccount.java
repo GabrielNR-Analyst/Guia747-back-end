@@ -1,10 +1,10 @@
-package com.guia747.accounts;
+package com.guia747.accounts.domain;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import com.guia747.authentication.OAuth2UserProfile;
+import com.guia747.infrastructure.oauth2.OAuth2UserProfile;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -12,7 +12,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @AllArgsConstructor
-public class UserAccount extends Entity implements Serializable {
+public class UserAccount implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
