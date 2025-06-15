@@ -27,7 +27,7 @@ public class GoogleOAuth2TokenService implements OAuth2TokenService {
         formData.add("client_id", provider.getClientId());
         formData.add("client_secret", provider.getClientSecret());
         formData.add("code", authorizationCode);
-        formData.add("redirect_uri", "http://localhost:3000");
+        formData.add("redirect_uri", provider.getRedirectUri());
 
         JsonNode response = restClient.post()
                 .uri(provider.getTokenUri())

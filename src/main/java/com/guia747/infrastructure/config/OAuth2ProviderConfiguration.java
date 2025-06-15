@@ -16,4 +16,6 @@ public class OAuth2ProviderConfiguration {
 
     private String userInfoUri;
     private String tokenUri;
+
+    private String redirectUri;
 }
