@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.31.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <!-- 1: Tabela permissions -->
+    <changeSet id="1" author="Guilherme Oliveira">
+        <createTable tableName="permissions">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_permissions"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uc_permissions_name"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+        </createTable>
+        <createIndex tableName="permissions" indexName="idx_permissions_name">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- 2: Tabela roles -->
+    <changeSet id="2" author="Guilherme Oliveira">
+        <createTable tableName="roles">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_roles"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="uc_roles_name"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+        </createTable>
+        <createIndex tableName="roles" indexName="idx_roles_name">
+            <column name="name"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- 3: Tabela role_permissions -->
+    <changeSet id="3" author="Guilherme Oliveira">
+        <createTable tableName="role_permissions">
+            <column name="permission_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="role_permissions"
+                       columnNames="permission_id, role_id"
+                       constraintName="pk_role_permissions"/>
+        <addForeignKeyConstraint
+                baseTableName="role_permissions"
+                baseColumnNames="permission_id"
+                referencedTableName="permissions"
+                referencedColumnNames="id"
+                constraintName="fk_roleper_permission"/>
+        <addForeignKeyConstraint
+                baseTableName="role_permissions"
+                baseColumnNames="role_id"
+                referencedTableName="roles"
+                referencedColumnNames="id"
+                constraintName="fk_roleper_role"/>
+    </changeSet>
+
+    <!-- 4: Tabela user_roles -->
+    <changeSet id="4" author="Guilherme Oliveira">
+        <createTable tableName="user_roles">
+            <column name="role_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="user_roles"
+                       columnNames="role_id, user_id"
+                       constraintName="pk_user_roles"/>
+        <addForeignKeyConstraint
+                baseTableName="user_roles"
+                baseColumnNames="role_id"
+                referencedTableName="roles"
+                referencedColumnNames="id"
+                constraintName="fk_userrole_role"/>
+        <addForeignKeyConstraint
+                baseTableName="user_roles"
+                baseColumnNames="user_id"
+                referencedTableName="user_accounts"
+                referencedColumnNames="id"
+                constraintName="fk_userrole_user"/>
+    </changeSet>
+</databaseChangeLog>
