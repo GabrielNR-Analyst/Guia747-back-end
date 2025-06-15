@@ -5,13 +5,24 @@ import java.util.List;
 import java.util.function.Consumer;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.http.HttpStatusCode;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
 
+@Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Schema(description = "Standardized error response format for API errors")
 public final class ApiErrorResponse {
 
+    @Schema(description = "HTTP status code of the error", example = "400")
     private final int status;
+
+    @Schema(description = "Unique error code", example = "invalid_request")
     private final String error;
+
+    @Schema(description = "Human-readable message describing the error", example = "Invalid request")
     private final String message;
+
+    @Schema(description = "List of specific error details, typically for validation errors")
     private final List<ErrorDetail> details;
 
     private ApiErrorResponse(Builder builder) {
@@ -19,22 +30,6 @@ public final class ApiErrorResponse {
         this.error = builder.error;
         this.message = builder.message;
         this.details = builder.details.isEmpty() ? null : List.copyOf(builder.details);
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public List<ErrorDetail> getDetails() {
-        return details;
     }
 
     // Entry points
@@ -111,7 +106,13 @@ public final class ApiErrorResponse {
         }
     }
 
-    public record ErrorDetail(String field, String message) {
+    @Schema(description = "Details of a specific error, typically for validation issues")
+    public record ErrorDetail(
+            @Schema(description = "Name of the field that caused the error", example = "email")
+            String field,
+            @Schema(description = "A specific message for the error on the field", example = "Invalid email format")
+            String message
+    ) {
 
     }
 }

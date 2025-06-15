@@ -19,9 +19,15 @@ import com.guia747.authentication.usecase.OAuth2AuthenticationUseCase;
 import com.guia747.infrastructure.security.OAuth2AuthenticationToken;
 import com.guia747.infrastructure.security.OAuth2UserPrincipal;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/oauth2")
+@Tag(name = "OAuth2 endpoints", description = "Base URL for OAuth2 authentication endpoints")
 public class OAuth2AuthenticationController {
 
     private final OAuth2AuthenticationUseCase oauth2AuthenticationUseCase;
@@ -33,7 +39,16 @@ public class OAuth2AuthenticationController {
         this.securityContextRepository = securityContextRepository;
     }
 
-    @Operation(summary = "Authenticate with OAuth2 authorization code")
+    @Operation(
+            summary = "Authenticate with OAuth2 authorization code"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successful authentication", content = @Content(
+                    schema = @Schema(implementation = UserAccountDetailsResponse.class)
+            )),
+            @ApiResponse(responseCode = "400", description = "Invalid input or missing parameters", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Authentication failed", content = @Content)
+    })
     @PostMapping("/loginWithGoogle")
     public ResponseEntity<UserAccountDetailsResponse> loginWithGoogle(
             @Valid @RequestBody OAuth2AuthenticationRequest request,
