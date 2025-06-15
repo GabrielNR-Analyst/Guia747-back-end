@@ -12,9 +12,10 @@ import com.guia747.authentication.command.OAuth2AuthenticationCommand;
 import com.guia747.authentication.command.RefreshAccessTokenCommand;
 import com.guia747.authentication.dto.AuthenticationResponse;
 import com.guia747.authentication.dto.OAuth2AuthenticationRequest;
-import com.guia747.authentication.dto.RefreshAccessTokenRequest;
+import com.guia747.authentication.dto.RefreshTokenRequest;
 import com.guia747.authentication.usecase.OAuth2AuthenticationUseCase;
 import com.guia747.authentication.usecase.RefreshAccessTokenUseCase;
+import com.guia747.authentication.usecase.RevokeRefreshTokenUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -29,11 +30,13 @@ public class OAuth2AuthenticationController {
 
     private final OAuth2AuthenticationUseCase oauth2AuthenticationUseCase;
     private final RefreshAccessTokenUseCase refreshAccessTokenUseCase;
+    private final RevokeRefreshTokenUseCase revokeRefreshTokenUseCase;
 
     public OAuth2AuthenticationController(OAuth2AuthenticationUseCase oauth2AuthenticationUseCase,
-            RefreshAccessTokenUseCase refreshAccessTokenUseCase) {
+            RefreshAccessTokenUseCase refreshAccessTokenUseCase, RevokeRefreshTokenUseCase revokeRefreshTokenUseCase) {
         this.oauth2AuthenticationUseCase = oauth2AuthenticationUseCase;
         this.refreshAccessTokenUseCase = refreshAccessTokenUseCase;
+        this.revokeRefreshTokenUseCase = revokeRefreshTokenUseCase;
     }
 
     @Operation(
@@ -67,7 +70,7 @@ public class OAuth2AuthenticationController {
             @ApiResponse(responseCode = "401", description = "Invalid refresh token", content = @Content)
     })
     @PostMapping("/token")
-    public ResponseEntity<AuthenticationResponse> refreshToken(@Valid @RequestBody RefreshAccessTokenRequest request,
+    public ResponseEntity<AuthenticationResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest request,
             HttpServletRequest httpRequest) {
 
         RefreshAccessTokenCommand command = new RefreshAccessTokenCommand(request.refreshToken(),
@@ -75,5 +78,19 @@ public class OAuth2AuthenticationController {
 
         AuthenticationResponse response = refreshAccessTokenUseCase.execute(command);
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(
+            summary = "Logout and revoke refresh token",
+            description = "Revokes the provided refresh token, effectively logging out the user."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Logout successful, refresh token revoked"),
+            @ApiResponse(responseCode = "401", description = "Invalid refresh token", content = @Content)
+    })
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@Valid @RequestBody RefreshTokenRequest request) {
+        revokeRefreshTokenUseCase.execute(request.refreshToken());
+        return ResponseEntity.noContent().build();
     }
 }
