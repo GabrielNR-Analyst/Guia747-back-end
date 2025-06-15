@@ -1,13 +1,13 @@
 package com.guia747.infrastructure.oauth2;
 
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.guia747.infrastructure.config.OAuth2ProviderConfiguration;
 import com.guia747.infrastructure.exception.OAuth2AuthenticationException;
 
-@Component
+@Service
 public class DefaultOAuth2UserService implements OAuth2UserService {
 
     private final OAuth2ProviderConfiguration provider;
