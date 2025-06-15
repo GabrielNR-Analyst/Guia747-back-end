@@ -1,6 +1,7 @@
 package com.guia747.infrastructure.persistence.repository;
 
 import java.util.Optional;
+import java.util.UUID;
 import org.springframework.stereotype.Repository;
 import com.guia747.accounts.domain.UserAccount;
 import com.guia747.accounts.domain.UserRepository;
@@ -23,6 +24,11 @@ public class DefaultUserRepository implements UserRepository {
     public UserAccount save(UserAccount userAccount) {
         UserJpaEntity entity = mapper.toEntity(userAccount);
         return mapper.toUserAccount(jpaRepository.save(entity));
+    }
+
+    @Override
+    public Optional<UserAccount> findById(UUID accountId) {
+        return jpaRepository.findById(accountId).map(mapper::toUserAccount);
     }
 
     @Override

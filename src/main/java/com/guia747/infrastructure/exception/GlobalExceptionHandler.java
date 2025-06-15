@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import com.guia747.authentication.exception.InvalidRefreshTokenException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -69,6 +70,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleOAuth2AuthenticationException(OAuth2AuthenticationException ex) {
         ApiErrorResponse response = ApiErrorResponse.status(HttpStatus.UNAUTHORIZED)
                 .error("unauthorized")
+                .message(ex.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
+
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<ApiErrorResponse> handleInvalidRefreshToken(InvalidRefreshTokenException ex) {
+        ApiErrorResponse response = ApiErrorResponse.status(HttpStatus.UNAUTHORIZED)
+                .error("invalid_refresh_token")
                 .message(ex.getMessage())
                 .build();
 
