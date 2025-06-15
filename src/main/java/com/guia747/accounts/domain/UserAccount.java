@@ -3,6 +3,8 @@ package com.guia747.accounts.domain;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import com.guia747.infrastructure.oauth2.OAuth2UserProfile;
 import lombok.AllArgsConstructor;
@@ -27,8 +29,10 @@ public class UserAccount implements Serializable {
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
+    private final Set<Role> roles;
+
     public static UserAccount createFromOAuth2Profile(OAuth2UserProfile userProfile) {
         return new UserAccount(null, userProfile.getName(), userProfile.getEmail(), userProfile.getPictureUrl(),
-                userProfile.getProviderId(), userProfile.getProviderName(), null, null);
+                userProfile.getProviderId(), userProfile.getProviderName(), null, null, new HashSet<>());
     }
 }

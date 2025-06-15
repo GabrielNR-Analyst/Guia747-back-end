@@ -5,7 +5,7 @@ import com.guia747.accounts.domain.UserAccount;
 import com.guia747.infrastructure.config.GlobalMapperConfig;
 import com.guia747.infrastructure.persistence.jpa.entity.UserJpaEntity;
 
-@Mapper(config = GlobalMapperConfig.class)
+@Mapper(config = GlobalMapperConfig.class, uses = {RoleMapper.class})
 public interface UserMapper {
 
     UserJpaEntity toEntity(UserAccount userAccount);
