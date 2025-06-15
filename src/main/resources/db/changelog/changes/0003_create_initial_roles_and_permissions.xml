@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1" author="Guilherme Oliveira">
+        <!-- create default roles -->
+        <insert tableName="roles">
+            <column name="id" value="7f53afb3-133e-425f-ac52-a226f44a66d7"/>
+            <column name="name" value="ADMINISTRATOR"/>
+            <column name="description"
+                    value="Tem controle total sobre o sistema, incluindo gerenciamento de usuários, empresas, locais, conteúdo e configurações RBAC."/>
+        </insert>
+        <insert tableName="roles">
+            <column name="id" value="3bd1f86d-4db6-4353-b0e8-ca0626dbbcff"/>
+            <column name="name" value="COMPANY_REPRESENTATIVE"/>
+            <column name="description"
+                    value="Usuário que representa uma empresa; responsável por gerenciar o perfil da empresa e os locais a ela associados."/>
+        </insert>
+        <insert tableName="roles">
+            <column name="id" value="3f4aa4ef-2571-4407-8e28-8c21fdac2db6"/>
+            <column name="name" value="USER"/>
+            <column name="description" value="Usuário comum que pode visualizar locais, cidades e enviar avaliações."/>
+        </insert>
+    </changeSet>
+
+    <!-- create default permissions -->
+    <changeSet id="2" author="Guilherme Oliveira">
+        <!-- Users -->
+        <insert tableName="permissions">
+            <column name="id" value="35e4124e-35ad-4425-8f35-6d1f89062836"/>
+            <column name="name" value="USER_READ"/>
+            <column name="description" value="Permite visualizar informações do perfil do usuário."/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="140ac49b-d4e8-4af8-954a-6408c93ea9e8"/>
+            <column name="name" value="USER_UPDATE"/>
+            <column name="description" value="Permite atualizar informações do perfil do usuário."/>
+        </insert>
+
+        <!-- Cities -->
+        <insert tableName="permissions">
+            <column name="id" value="8e60f531-9c69-4749-9f0a-57b64ab265b0"/>
+            <column name="name" value="CITY_READ"/>
+            <column name="description" value="Permite visualizar informações de cidades."/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="7b54f5e4-b438-4140-b937-e377def2dc82"/>
+            <column name="name" value="CITY_CREATE"/>
+            <column name="description" value="Permite criar novas cidades."/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="3c389e4f-39e4-47df-abe3-d36d0b4f8284"/>
+            <column name="name" value="CITY_UPDATE"/>
+            <column name="description" value="Permite atualizar informações de cidades."/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="40989285-032a-4740-98b9-fd7822b9054e"/>
+            <column name="name" value="CITY_DELETE"/>
+            <column name="description" value="Permite deletar cidades."/>
+        </insert>
+
+        <!-- Places -->
+        <insert tableName="permissions">
+            <column name="id" value="f3abf8e2-7b5a-40be-8763-c267994ca986"/>
+            <column name="name" value="PLACE_CREATE"/>
+            <column name="description" value="Permite criar novos locais."/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="955f99dc-eda4-4580-9515-46977ab050d7"/>
+            <column name="name" value="PLACE_READ"/>
+            <column name="description" value="Permite visualizar informações de locais."/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="4624e403-23a1-4a00-9c7c-bcce26cd156b"/>
+            <column name="name" value="PLACE_UPDATE"/>
+            <column name="description" value="Permite atualizar informações de locais."/>
+        </insert>
+        <insert tableName="permissions">
+            <column name="id" value="296af5bf-a9a8-47ed-a5c3-115bef77299a"/>
+            <column name="name" value="PLACE_DELETE"/>
+            <column name="description" value="Permite deletar locais."/>
+        </insert>
+    </changeSet>
+
+    <!-- regular users -->
+    <changeSet id="3" author="Guilherme Oliveira">
+        <insert tableName="role_permissions">
+            <column name="role_id" value="3f4aa4ef-2571-4407-8e28-8c21fdac2db6"/> <!-- USER -->
+            <column name="permission_id" value="35e4124e-35ad-4425-8f35-6d1f89062836"/> <!-- user:read -->
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="3f4aa4ef-2571-4407-8e28-8c21fdac2db6"/>
+            <column name="permission_id" value="140ac49b-d4e8-4af8-954a-6408c93ea9e8"/> <!-- user:update -->
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="3f4aa4ef-2571-4407-8e28-8c21fdac2db6"/>
+            <column name="permission_id" value="8e60f531-9c69-4749-9f0a-57b64ab265b0"/> <!-- city:read -->
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="3f4aa4ef-2571-4407-8e28-8c21fdac2db6"/>
+            <column name="permission_id" value="955f99dc-eda4-4580-9515-46977ab050d7"/> <!-- place:read -->
+        </insert>
+    </changeSet>
+
+    <!-- company representative -->
+    <changeSet id="4" author="Guilherme Oliveira">
+        <insert tableName="role_permissions">
+            <column name="role_id" value="3bd1f86d-4db6-4353-b0e8-ca0626dbbcff"/>
+            <column name="permission_id" value="35e4124e-35ad-4425-8f35-6d1f89062836"/> <!-- user:read -->
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="3bd1f86d-4db6-4353-b0e8-ca0626dbbcff"/>
+            <column name="permission_id" value="140ac49b-d4e8-4af8-954a-6408c93ea9e8"/> <!-- user:update -->
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="3bd1f86d-4db6-4353-b0e8-ca0626dbbcff"/>
+            <column name="permission_id" value="8e60f531-9c69-4749-9f0a-57b64ab265b0"/> <!-- city:read -->
+        </insert>
+        <!-- place -->
+        <insert tableName="role_permissions">
+            <column name="role_id" value="3bd1f86d-4db6-4353-b0e8-ca0626dbbcff"/>
+            <column name="permission_id" value="f3abf8e2-7b5a-40be-8763-c267994ca986"/> <!-- place:create -->
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="3bd1f86d-4db6-4353-b0e8-ca0626dbbcff"/>
+            <column name="permission_id" value="955f99dc-eda4-4580-9515-46977ab050d7"/> <!-- place:read -->
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="3bd1f86d-4db6-4353-b0e8-ca0626dbbcff"/>
+            <column name="permission_id" value="4624e403-23a1-4a00-9c7c-bcce26cd156b"/> <!-- place:update -->
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="3bd1f86d-4db6-4353-b0e8-ca0626dbbcff"/>
+            <column name="permission_id" value="296af5bf-a9a8-47ed-a5c3-115bef77299a"/> <!-- place:delete -->
+        </insert>
+    </changeSet>
+
+    <!-- administrator -->
+    <changeSet id="5" author="Guilherme Oliveira">
+        <insert tableName="role_permissions">
+            <column name="role_id" value="7f53afb3-133e-425f-ac52-a226f44a66d7"/>
+            <column name="permission_id" value="35e4124e-35ad-4425-8f35-6d1f89062836"/> <!-- user:read -->
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="7f53afb3-133e-425f-ac52-a226f44a66d7"/>
+            <column name="permission_id" value="140ac49b-d4e8-4af8-954a-6408c93ea9e8"/> <!-- user:update -->
+        </insert>
+
+        <insert tableName="role_permissions">
+            <column name="role_id" value="7f53afb3-133e-425f-ac52-a226f44a66d7"/>
+            <column name="permission_id" value="8e60f531-9c69-4749-9f0a-57b64ab265b0"/> <!-- city:read -->
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="7f53afb3-133e-425f-ac52-a226f44a66d7"/>
+            <column name="permission_id" value="7b54f5e4-b438-4140-b937-e377def2dc82"/> <!-- city:create -->
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="7f53afb3-133e-425f-ac52-a226f44a66d7"/>
+            <column name="permission_id" value="3c389e4f-39e4-47df-abe3-d36d0b4f8284"/> <!-- city:update -->
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="7f53afb3-133e-425f-ac52-a226f44a66d7"/>
+            <column name="permission_id" value="40989285-032a-4740-98b9-fd7822b9054e"/> <!-- city:delete -->
+        </insert>
+
+        <insert tableName="role_permissions">
+            <column name="role_id" value="7f53afb3-133e-425f-ac52-a226f44a66d7"/>
+            <column name="permission_id" value="f3abf8e2-7b5a-40be-8763-c267994ca986"/> <!-- place:create -->
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="7f53afb3-133e-425f-ac52-a226f44a66d7"/>
+            <column name="permission_id" value="955f99dc-eda4-4580-9515-46977ab050d7"/> <!-- place:read -->
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="7f53afb3-133e-425f-ac52-a226f44a66d7"/>
+            <column name="permission_id" value="4624e403-23a1-4a00-9c7c-bcce26cd156b"/> <!-- place:update -->
+        </insert>
+        <insert tableName="role_permissions">
+            <column name="role_id" value="7f53afb3-133e-425f-ac52-a226f44a66d7"/>
+            <column name="permission_id" value="296af5bf-a9a8-47ed-a5c3-115bef77299a"/> <!-- place:delete -->
+        </insert>
+    </changeSet>
+</databaseChangeLog>
