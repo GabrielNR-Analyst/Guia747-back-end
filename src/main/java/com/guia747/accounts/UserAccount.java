@@ -2,6 +2,7 @@ package com.guia747.accounts;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import com.guia747.authentication.OAuth2UserProfile;
 import lombok.AllArgsConstructor;
@@ -23,8 +24,11 @@ public class UserAccount extends Entity implements Serializable {
     private final String providerId;
     private final String providerName;
 
+    private final LocalDateTime createdAt;
+    private final LocalDateTime updatedAt;
+
     public static UserAccount createFromOAuth2Profile(OAuth2UserProfile userProfile) {
         return new UserAccount(null, userProfile.getName(), userProfile.getEmail(), userProfile.getPictureUrl(),
-                userProfile.getProviderId(), userProfile.getProviderName());
+                userProfile.getProviderId(), userProfile.getProviderName(), null, null);
     }
 }

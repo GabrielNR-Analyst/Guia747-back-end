@@ -12,9 +12,9 @@ import com.guia747.infrastructure.security.OAuth2UserPrincipal;
 public class UserAccountController {
 
     @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser(Authentication authentication) {
+    public ResponseEntity<UserAccountDetailsResponse> getCurrentUser(Authentication authentication) {
         OAuth2UserPrincipal principal = (OAuth2UserPrincipal) authentication.getPrincipal();
         UserAccount userAccount = principal.getUserAccount();
-        return ResponseEntity.status(401).body("Not authenticated");
+        return ResponseEntity.ok(UserAccountDetailsResponse.fromUserAccount(userAccount));
     }
 }
