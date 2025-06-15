@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.guia747.accounts.dto.UserAccountDetailsResponse;
 import com.guia747.authentication.dto.AuthenticationResponse;
 import com.guia747.authentication.dto.OAuth2AuthenticationRequest;
 import com.guia747.authentication.usecase.OAuth2AuthenticationUseCase;
@@ -33,7 +32,7 @@ public class OAuth2AuthenticationController {
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Successful authentication", content = @Content(
-                    schema = @Schema(implementation = UserAccountDetailsResponse.class)
+                    schema = @Schema(implementation = AuthenticationResponse.class)
             )),
             @ApiResponse(responseCode = "400", description = "Invalid input or missing parameters", content = @Content),
             @ApiResponse(responseCode = "401", description = "Authentication failed", content = @Content)

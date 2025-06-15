@@ -4,5 +4,5 @@ import com.guia747.accounts.domain.UserAccount;
 
 public interface JwtTokenService {
 
-    JwtToken generateAccessToken(UserAccount userAccount);
+    JwtTokenPair generateTokenPair(UserAccount userAccount);
 }

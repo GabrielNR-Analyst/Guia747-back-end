@@ -14,16 +14,21 @@ import com.guia747.infrastructure.config.JwtProperties;
 @Service
 public class NimbusJwtTokenService implements JwtTokenService {
 
+    private static final int REFRESH_TOKEN_BYTES_LENGTH = 64;
+
     private final JwtProperties jwtProperties;
     private final JwtEncoder jwtEncoder;
+    private final SecureRandomBase64TokenGenerator secureRandomBase64TokenGenerator;
 
-    public NimbusJwtTokenService(JwtProperties jwtProperties, JwtEncoder jwtEncoder) {
+    public NimbusJwtTokenService(JwtProperties jwtProperties, JwtEncoder jwtEncoder,
+            SecureRandomBase64TokenGenerator secureRandomBase64TokenGenerator) {
         this.jwtProperties = jwtProperties;
         this.jwtEncoder = jwtEncoder;
+        this.secureRandomBase64TokenGenerator = secureRandomBase64TokenGenerator;
     }
 
     @Override
-    public JwtToken generateAccessToken(UserAccount userAccount) {
+    public JwtTokenPair generateTokenPair(UserAccount userAccount) {
         JwsHeader headers = JwsHeader.with(MacAlgorithm.HS256).build();
 
         Instant now = Instant.now();
@@ -38,6 +43,10 @@ public class NimbusJwtTokenService implements JwtTokenService {
         JwtEncoderParameters encoderParameters = JwtEncoderParameters.from(headers, claims);
         Jwt jwt = jwtEncoder.encode(encoderParameters);
 
-        return new JwtToken(jwt.getTokenValue(), jwtProperties.getAccessTokenTtl());
+        // Generate refresh token
+        String refreshToken = secureRandomBase64TokenGenerator.generate(REFRESH_TOKEN_BYTES_LENGTH);
+
+        return new JwtTokenPair(jwt.getTokenValue(), refreshToken, jwtProperties.getAccessTokenTtl(),
+                jwtProperties.getRefreshTokenTtl());
     }
 }
