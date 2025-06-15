@@ -1,11 +1,14 @@
 package com.guia747.authentication.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.guia747.authentication.command.OAuth2AuthenticationCommand;
 import com.guia747.authentication.dto.AuthenticationResponse;
 import com.guia747.authentication.dto.OAuth2AuthenticationRequest;
 import com.guia747.authentication.usecase.OAuth2AuthenticationUseCase;
@@ -39,8 +42,13 @@ public class OAuth2AuthenticationController {
     })
     @PostMapping("/loginWithGoogle")
     public ResponseEntity<AuthenticationResponse> loginWithGoogle(
-            @Valid @RequestBody OAuth2AuthenticationRequest request) {
-        AuthenticationResponse authenticationResponse = oauth2AuthenticationUseCase.execute(request);
+            @Valid @RequestBody OAuth2AuthenticationRequest request, HttpServletRequest httpRequest) {
+
+        OAuth2AuthenticationCommand command = new OAuth2AuthenticationCommand(request.code(),
+                httpRequest.getRemoteAddr(),
+                httpRequest.getHeader(HttpHeaders.USER_AGENT));
+
+        AuthenticationResponse authenticationResponse = oauth2AuthenticationUseCase.execute(command);
         return ResponseEntity.ok(authenticationResponse);
     }
 }
