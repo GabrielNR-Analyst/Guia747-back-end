@@ -64,4 +64,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
+    @ExceptionHandler(OAuth2AuthenticationException.class)
+    public ResponseEntity<ApiErrorResponse> handleOAuth2AuthenticationException(OAuth2AuthenticationException ex) {
+        ApiErrorResponse response = ApiErrorResponse.status(HttpStatus.UNAUTHORIZED)
+                .error("unauthorized")
+                .message(ex.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
 }

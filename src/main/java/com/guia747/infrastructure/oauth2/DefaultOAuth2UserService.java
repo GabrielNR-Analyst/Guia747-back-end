@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.guia747.infrastructure.config.OAuth2ProviderConfiguration;
+import com.guia747.infrastructure.exception.OAuth2AuthenticationException;
 
 @Component
 public class DefaultOAuth2UserService implements OAuth2UserService {
@@ -27,7 +28,7 @@ public class DefaultOAuth2UserService implements OAuth2UserService {
                 .body(JsonNode.class);
 
         if (response == null) {
-            throw new RuntimeException("User info response was null");
+            throw new OAuth2AuthenticationException("User info response was null");
         }
 
         return OAuth2UserProfile.withGoogleProvider(response.get("sub").asText())

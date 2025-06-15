@@ -7,6 +7,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.guia747.infrastructure.config.OAuth2ProviderConfiguration;
+import com.guia747.infrastructure.exception.OAuth2AuthenticationException;
 
 @Component
 public class GoogleOAuth2TokenService implements OAuth2TokenService {
@@ -36,7 +37,7 @@ public class GoogleOAuth2TokenService implements OAuth2TokenService {
                 .body(JsonNode.class);
 
         if (response == null || !response.has("access_token")) {
-            throw new RuntimeException("Invalid token response from google provider");
+            throw new OAuth2AuthenticationException("Invalid token response from google provider");
         }
 
         return response.get("access_token").asText();
