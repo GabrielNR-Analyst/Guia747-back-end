@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.guia747.accounts.UserAccount;
+import com.guia747.accounts.UserAccountDetailsResponse;
 import com.guia747.authentication.usecase.OAuth2AuthenticationUseCase;
 import com.guia747.infrastructure.security.OAuth2AuthenticationToken;
 import com.guia747.infrastructure.security.OAuth2UserPrincipal;
@@ -34,7 +35,8 @@ public class OAuth2AuthenticationController {
 
     @Operation(summary = "Authenticate with OAuth2 authorization code")
     @PostMapping("/loginWithGoogle")
-    public ResponseEntity<?> loginWithGoogle(@Valid @RequestBody OAuth2AuthenticationRequest request,
+    public ResponseEntity<UserAccountDetailsResponse> loginWithGoogle(
+            @Valid @RequestBody OAuth2AuthenticationRequest request,
             HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         UserAccount userAccount = oauth2AuthenticationUseCase.execute(request);
 
@@ -48,6 +50,6 @@ public class OAuth2AuthenticationController {
 
         securityContextRepository.saveContext(securityContext, httpRequest, httpResponse);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(UserAccountDetailsResponse.fromUserAccount(userAccount));
     }
 }
