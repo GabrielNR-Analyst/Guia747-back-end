@@ -26,6 +26,11 @@ public class DefaultStateRepository implements StateRepository {
     }
 
     @Override
+    public Optional<State> findByUf(String uf) {
+        return jpaRepository.findByUf(uf).map(mapper::toDomain);
+    }
+
+    @Override
     public List<State> findAll() {
         return jpaRepository.findAll().stream().map(mapper::toDomain).toList();
     }

@@ -2,10 +2,11 @@ package com.guia747.cities.service;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import javax.imageio.ImageIO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.guia747.cities.dto.CreateCityRequest;
@@ -44,6 +45,15 @@ public class DefaultCityManagementService implements CityManagementService {
         newCity.updateImages(thumbnail, banner);
 
         return cityRepository.save(newCity);
+    }
+
+    @Override
+    @Transactional
+    public Page<City> getAllCitiesByUf(String uf, Pageable pageable) {
+        State state = stateRepository.findByUf(uf)
+                .orElseThrow(() -> new ResourceNotFoundException("Estado não encontrado"));
+
+        return cityRepository.findAllByState(state, pageable);
     }
 
     private Image getImageFromUrl(ImageRequest request) {

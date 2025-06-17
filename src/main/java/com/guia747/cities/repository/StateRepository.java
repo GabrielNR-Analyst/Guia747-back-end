@@ -9,5 +9,7 @@ public interface StateRepository {
 
     Optional<State> findById(UUID id);
 
+    Optional<State> findByUf(String uf);
+
     List<State> findAll();
 }
