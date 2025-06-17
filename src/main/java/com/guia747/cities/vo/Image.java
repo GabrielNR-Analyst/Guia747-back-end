@@ -1,5 +1,7 @@
 package com.guia747.cities.vo;
 
+import java.io.Serial;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +9,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Image {
+public class Image implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private String url;
     private Integer width;

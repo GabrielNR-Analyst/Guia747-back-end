@@ -1,6 +1,7 @@
 package com.guia747.cities.service;
 
 import java.util.List;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.guia747.cities.entity.State;
@@ -17,6 +18,7 @@ public class DefaultStateManagementService implements StateManagementService {
 
     @Override
     @Transactional
+    @Cacheable(value = "states", key = "'allStates'")
     public List<State> getAllStates() {
         return stateRepository.findAll();
     }
