@@ -21,7 +21,7 @@ import lombok.Setter;
 public class JpaCityEntity extends JpaAuditableEntity {
 
     // Cidade com maior nome tem 32 caracteres
-    @Column(name = "name", nullable = false, unique = true, length = 50)
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
 
     @ManyToOne
