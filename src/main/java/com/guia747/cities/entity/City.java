@@ -1,15 +1,14 @@
 package com.guia747.cities.entity;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 import com.guia747.cities.vo.Image;
 import com.guia747.common.AggregateRoot;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
 public class City extends AggregateRoot<UUID> {
 
     private String name;
@@ -20,8 +19,11 @@ public class City extends AggregateRoot<UUID> {
     private Image thumbnail;
     private Image banner;
 
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
     public static City createNew(String name, State state, String slug, String description) {
-        return new City(name, state, slug, description, null, null, null);
+        return new City(name, state, slug, description, null, null, null, null, null);
     }
 
     public void updateImages(Image newThumbnail, Image newBanner) {
