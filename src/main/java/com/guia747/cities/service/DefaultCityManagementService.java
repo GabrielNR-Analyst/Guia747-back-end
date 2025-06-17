@@ -56,6 +56,12 @@ public class DefaultCityManagementService implements CityManagementService {
         return cityRepository.findAllByState(state, pageable);
     }
 
+    @Override
+    @Transactional
+    public Page<City> getAllCities(Pageable pageable) {
+        return cityRepository.findAll(pageable);
+    }
+
     private Image getImageFromUrl(ImageRequest request) {
         if (request == null || request.url() == null || request.url().isBlank()) {
             return null;

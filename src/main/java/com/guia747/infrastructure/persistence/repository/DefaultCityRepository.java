@@ -37,4 +37,9 @@ public class DefaultCityRepository implements CityRepository {
         JpaStateEntity entity = stateMapper.toEntity(state);
         return jpaRepository.findByState(entity, pageable).map(cityMapper::toDomain);
     }
+
+    @Override
+    public Page<City> findAll(Pageable pageable) {
+        return jpaRepository.findAll(pageable).map(cityMapper::toDomain);
+    }
 }

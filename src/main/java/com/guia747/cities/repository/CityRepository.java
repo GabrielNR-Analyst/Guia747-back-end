@@ -10,4 +10,6 @@ public interface CityRepository {
     City save(City city);
 
     Page<City> findAllByState(State state, Pageable pageable);
+
+    Page<City> findAll(Pageable pageable);
 }

@@ -10,4 +10,6 @@ public interface CityManagementService {
     City createCity(CreateCityRequest request);
 
     Page<City> getAllCitiesByUf(String uf, Pageable pageable);
+
+    Page<City> getAllCities(Pageable pageable);
 }
