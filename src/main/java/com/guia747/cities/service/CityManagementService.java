@@ -11,5 +11,5 @@ public interface CityManagementService {
 
     Page<City> getAllCitiesByUf(String uf, Pageable pageable);
 
-    Page<City> getAllCities(Pageable pageable);
+    Page<City> getAllCities(String search, Pageable pageable);
 }

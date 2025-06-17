@@ -9,6 +9,7 @@ import com.guia747.cities.repository.CityRepository;
 import com.guia747.infrastructure.persistence.jpa.entity.JpaCityEntity;
 import com.guia747.infrastructure.persistence.jpa.entity.JpaStateEntity;
 import com.guia747.infrastructure.persistence.jpa.repository.JpaCityRepository;
+import com.guia747.infrastructure.persistence.jpa.specification.CitySpecification;
 import com.guia747.infrastructure.persistence.mapper.CityMapper;
 import com.guia747.infrastructure.persistence.mapper.StateMapper;
 
@@ -39,7 +40,7 @@ public class DefaultCityRepository implements CityRepository {
     }
 
     @Override
-    public Page<City> findAll(Pageable pageable) {
-        return jpaRepository.findAll(pageable).map(cityMapper::toDomain);
+    public Page<City> findAll(String search, Pageable pageable) {
+        return jpaRepository.findAll(CitySpecification.withFilters(search), pageable).map(cityMapper::toDomain);
     }
 }

@@ -40,6 +40,7 @@ public class CityController {
 
     @GetMapping
     public ResponseEntity<GetAllCitiesResponse> getAllCities(
+            @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "0") @Min(0) int page,
             @RequestParam(defaultValue = "20") @Min(0) @Max(100) int size,
             @RequestParam(defaultValue = "name") String sortBy,
@@ -48,7 +49,7 @@ public class CityController {
         Sort.Direction direction = Sort.Direction.fromString(sortDirection);
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
 
-        Page<City> cities = cityManagementService.getAllCities(pageable);
+        Page<City> cities = cityManagementService.getAllCities(search, pageable);
         Page<CityResponse> cityResponses = cities.map(CityResponse::from);
 
         GetAllCitiesResponse response = GetAllCitiesResponse.from(cityResponses);

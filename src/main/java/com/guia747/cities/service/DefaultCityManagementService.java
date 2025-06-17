@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import javax.imageio.ImageIO;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -58,8 +59,9 @@ public class DefaultCityManagementService implements CityManagementService {
 
     @Override
     @Transactional
-    public Page<City> getAllCities(Pageable pageable) {
-        return cityRepository.findAll(pageable);
+    @Cacheable(value = "allCities", key = "{#search, #pageable.pageNumber, #pageable.pageSize, #pageable.sort}")
+    public Page<City> getAllCities(String search, Pageable pageable) {
+        return cityRepository.findAll(search, pageable);
     }
 
     private Image getImageFromUrl(ImageRequest request) {
