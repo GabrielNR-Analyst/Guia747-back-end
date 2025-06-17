@@ -1,5 +1,6 @@
 package com.guia747.infrastructure.persistence.repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Repository;
@@ -22,5 +23,10 @@ public class DefaultStateRepository implements StateRepository {
     @Override
     public Optional<State> findById(UUID id) {
         return jpaRepository.findById(id).map(mapper::toDomain);
+    }
+
+    @Override
+    public List<State> findAll() {
+        return jpaRepository.findAll().stream().map(mapper::toDomain).toList();
     }
 }
