@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import com.guia747.places.dto.CategoryResponse;
 import com.guia747.places.dto.CreateCategoryRequest;
 import com.guia747.places.dto.CreatePlaceRequest;
 import com.guia747.places.dto.PlaceResponse;
+import com.guia747.places.dto.PlaceDetailsResponse;
 import com.guia747.places.entity.Category;
 import com.guia747.places.entity.Place;
 import com.guia747.places.service.CategoryManagementService;
@@ -44,7 +46,13 @@ public class PlaceController {
             @AuthenticationPrincipal Jwt jwt) {
         UUID userId = UUID.fromString(jwt.getSubject());
         Place place = placeManagementService.createPlace(userId, request);
-        return ResponseEntity.ok(new PlaceResponse(place.getId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new PlaceResponse(place.getId()));
+    }
+
+    @GetMapping("/{placeId}")
+    public ResponseEntity<PlaceDetailsResponse> getPlace(@PathVariable UUID placeId) {
+        PlaceDetailsResponse placeDetailsResponse = placeManagementService.getPlaceDetail(placeId);
+        return ResponseEntity.ok(placeDetailsResponse);
     }
 
     @Operation(

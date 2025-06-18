@@ -1,5 +1,7 @@
 package com.guia747.infrastructure.persistence.repository;
 
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.stereotype.Repository;
 import com.guia747.infrastructure.persistence.jpa.entity.JpaPlaceEntity;
 import com.guia747.infrastructure.persistence.jpa.repository.PlaceJpaRepository;
@@ -23,5 +25,10 @@ public class DefaultPlaceRepository implements PlaceRepository {
         JpaPlaceEntity entity = mapper.toEntity(place);
         JpaPlaceEntity savedPlace = jpaRepository.save(entity);
         return mapper.toDomain(savedPlace);
+    }
+
+    @Override
+    public Optional<Place> findById(UUID placeId) {
+        return jpaRepository.findById(placeId).map(mapper::toDomain);
     }
 }

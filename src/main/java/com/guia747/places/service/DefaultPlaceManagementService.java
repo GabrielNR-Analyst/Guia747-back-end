@@ -11,6 +11,7 @@ import com.guia747.cities.repository.CityRepository;
 import com.guia747.common.ResourceNotFoundException;
 import com.guia747.places.dto.CreatePlaceRequest;
 import com.guia747.places.dto.OperatingHoursData;
+import com.guia747.places.dto.PlaceDetailsResponse;
 import com.guia747.places.entity.Place;
 import com.guia747.places.repository.PlaceRepository;
 import com.guia747.places.vo.Address;
@@ -85,6 +86,15 @@ public class DefaultPlaceManagementService implements PlaceManagementService {
         }
 
         return placeRepository.save(place);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PlaceDetailsResponse getPlaceDetail(UUID placeId) {
+        Place place = placeRepository.findById(placeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Local não encontrado"));
+
+        return PlaceDetailsResponse.from(place);
     }
 
     private OperatingHours createOperatingHours(OperatingHoursData data) {
