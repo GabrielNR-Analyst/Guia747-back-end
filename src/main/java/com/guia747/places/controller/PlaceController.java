@@ -1,9 +1,12 @@
 package com.guia747.places.controller;
 
 import java.util.List;
+import java.util.UUID;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,8 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.guia747.places.dto.CategoryResponse;
 import com.guia747.places.dto.CreateCategoryRequest;
+import com.guia747.places.dto.CreatePlaceRequest;
+import com.guia747.places.dto.PlaceResponse;
 import com.guia747.places.entity.Category;
+import com.guia747.places.entity.Place;
 import com.guia747.places.service.CategoryManagementService;
+import com.guia747.places.service.PlaceManagementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,9 +31,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 public class PlaceController {
 
     private final CategoryManagementService categoryManagementService;
+    private final PlaceManagementService placeManagementService;
 
-    public PlaceController(CategoryManagementService categoryManagementService) {
+    public PlaceController(CategoryManagementService categoryManagementService,
+            PlaceManagementService placeManagementService) {
         this.categoryManagementService = categoryManagementService;
+        this.placeManagementService = placeManagementService;
+    }
+
+    @PostMapping
+    public ResponseEntity<PlaceResponse> create(@Valid @RequestBody CreatePlaceRequest request,
+            @AuthenticationPrincipal Jwt jwt) {
+        UUID userId = UUID.fromString(jwt.getSubject());
+        Place place = placeManagementService.createPlace(userId, request);
+        return ResponseEntity.ok(new PlaceResponse(place.getId()));
     }
 
     @Operation(

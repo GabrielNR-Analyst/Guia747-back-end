@@ -11,4 +11,8 @@ public class Contact {
     private String instagramUrl;
     private String facebookUrl;
     private String whatsappUrl;
+
+    public static Contact createNew(String phoneNumber, String instagramUrl, String facebookUrl, String whatsappUrl) {
+        return new Contact(phoneNumber, instagramUrl, facebookUrl, whatsappUrl);
+    }
 }
