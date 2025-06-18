@@ -26,8 +26,21 @@ public class City extends AggregateRoot<UUID> {
         return new City(name, state, slug, description, null, null, null, null, null);
     }
 
+    public void updateDetails(String description, String about) {
+        if (description != null && !description.isBlank() && !description.equals(this.description)) {
+            this.description = description;
+        }
+        if (about != null && !about.isBlank() && !about.equals(this.about)) {
+            this.about = about;
+        }
+    }
+
     public void updateImages(Image newThumbnail, Image newBanner) {
-        this.thumbnail = newThumbnail;
-        this.banner = newBanner;
+        if (newThumbnail != null) {
+            this.thumbnail = newThumbnail;
+        }
+        if (newBanner != null) {
+            this.banner = newBanner;
+        }
     }
 }

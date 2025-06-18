@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.util.UUID;
 import javax.imageio.ImageIO;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.guia747.cities.dto.CreateCityRequest;
 import com.guia747.cities.dto.ImageRequest;
+import com.guia747.cities.dto.UpdateCityRequest;
 import com.guia747.cities.entity.City;
 import com.guia747.cities.entity.State;
 import com.guia747.cities.repository.CityRepository;
@@ -62,6 +64,22 @@ public class DefaultCityManagementService implements CityManagementService {
     @Cacheable(value = "allCities", key = "{#search, #pageable.pageNumber, #pageable.pageSize, #pageable.sort}")
     public Page<City> getAllCities(String search, Pageable pageable) {
         return cityRepository.findAll(search, pageable);
+    }
+
+    @Override
+    @Transactional
+    public City updateCity(UUID cityId, UpdateCityRequest request) {
+        City city = cityRepository.findById(cityId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cidade não encontrada"));
+
+        city.updateDetails(request.description(), request.about());
+
+        Image thumbnail = getImageFromUrl(request.thumbnail());
+        Image banner = getImageFromUrl(request.banner());
+
+        city.updateImages(thumbnail, banner);
+
+        return cityRepository.save(city);
     }
 
     private Image getImageFromUrl(ImageRequest request) {

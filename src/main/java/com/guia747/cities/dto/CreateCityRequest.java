@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 public record CreateCityRequest(
         @NotBlank @Size(max = 32) String name,
         @NotNull UUID stateId,
-        @NotBlank @Size(min = 30, max = 320) String description,
+        @NotBlank @Size(min = 10, max = 320) String description,
         ImageRequest thumbnail,
         ImageRequest banner
 ) {

@@ -1,5 +1,7 @@
 package com.guia747.infrastructure.persistence.repository;
 
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -31,6 +33,11 @@ public class DefaultCityRepository implements CityRepository {
         JpaCityEntity entity = cityMapper.toEntity(city);
         JpaCityEntity savedCity = jpaRepository.save(entity);
         return cityMapper.toDomain(savedCity);
+    }
+
+    @Override
+    public Optional<City> findById(UUID id) {
+        return jpaRepository.findById(id).map(cityMapper::toDomain);
     }
 
     @Override
