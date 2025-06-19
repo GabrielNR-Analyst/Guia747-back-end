@@ -59,7 +59,8 @@ public class DefaultPlaceManagementService implements PlaceManagementService {
                     request.contact().phoneNumber(),
                     request.contact().instagramUrl(),
                     request.contact().facebookUrl(),
-                    request.contact().whatsappUrl()
+                    request.contact().whatsappUrl(),
+                    request.contact().email()
             );
             place.updateContact(contact);
         }
