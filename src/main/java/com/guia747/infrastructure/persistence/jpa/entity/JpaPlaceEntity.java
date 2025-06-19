@@ -17,8 +17,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import com.guia747.infrastructure.persistence.jpa.embeddable.FAQEmbeddable;
 import com.guia747.infrastructure.persistence.jpa.embeddable.OperatingHoursEmbeddable;
-import com.guia747.infrastructure.persistence.jpa.embeddable.PlaceAddressEmbeddable;
-import com.guia747.infrastructure.persistence.jpa.embeddable.PlaceContactEmbeddable;
+import com.guia747.infrastructure.persistence.jpa.embeddable.AddressEmbeddable;
+import com.guia747.infrastructure.persistence.jpa.embeddable.ContactEmbeddable;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -47,10 +47,10 @@ public class JpaPlaceEntity extends JpaAuditableEntity {
     private String about;
 
     @Embedded
-    private PlaceAddressEmbeddable address;
+    private AddressEmbeddable address;
 
     @Embedded
-    private PlaceContactEmbeddable contact;
+    private ContactEmbeddable contact;
 
     @Column(name = "youtube_video_url", length = 500)
     private String youtubeVideoUrl;

@@ -8,7 +8,7 @@ import lombok.Setter;
 @Embeddable
 @Getter
 @Setter
-public class PlaceContactEmbeddable {
+public class ContactEmbeddable {
 
     @Column(name = "phone_number", length = 20)
     private String phoneNumber;

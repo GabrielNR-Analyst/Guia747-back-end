@@ -3,10 +3,10 @@ package com.guia747.infrastructure.persistence.mapper;
 import java.util.List;
 import org.mapstruct.Mapper;
 import com.guia747.infrastructure.config.GlobalMapperConfig;
+import com.guia747.infrastructure.persistence.jpa.embeddable.AddressEmbeddable;
 import com.guia747.infrastructure.persistence.jpa.embeddable.FAQEmbeddable;
 import com.guia747.infrastructure.persistence.jpa.embeddable.OperatingHoursEmbeddable;
-import com.guia747.infrastructure.persistence.jpa.embeddable.PlaceAddressEmbeddable;
-import com.guia747.infrastructure.persistence.jpa.embeddable.PlaceContactEmbeddable;
+import com.guia747.infrastructure.persistence.jpa.embeddable.ContactEmbeddable;
 import com.guia747.infrastructure.persistence.jpa.entity.JpaPlaceEntity;
 import com.guia747.places.entity.Place;
 import com.guia747.places.vo.Address;
@@ -17,13 +17,13 @@ import com.guia747.places.vo.OperatingHours;
 @Mapper(config = GlobalMapperConfig.class, uses = {UserMapper.class, CategoryJpaMapper.class, CityMapper.class})
 public interface PlaceJpaMapper {
 
-    PlaceAddressEmbeddable toAddressEmbeddable(Address address);
+    AddressEmbeddable toAddressEmbeddable(Address address);
 
-    Address toAddress(PlaceAddressEmbeddable addressEmbeddable);
+    Address toAddress(AddressEmbeddable addressEmbeddable);
 
-    PlaceContactEmbeddable toContactEmbeddable(Contact contact);
+    ContactEmbeddable toContactEmbeddable(Contact contact);
 
-    Contact toContact(PlaceContactEmbeddable contactEmbeddable);
+    Contact toContact(ContactEmbeddable contactEmbeddable);
 
     OperatingHoursEmbeddable toOperatingHoursEmbeddable(OperatingHours operatingHours);
 
