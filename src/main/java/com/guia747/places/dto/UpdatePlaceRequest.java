@@ -2,6 +2,7 @@ package com.guia747.places.dto;
 
 import java.util.List;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record UpdatePlaceRequest(
@@ -11,8 +12,8 @@ public record UpdatePlaceRequest(
         @Valid ContactData contact,
         String youtubeVideoUrl,
         String thumbnailUrl,
-        List<OperatingHoursData> operatingHours,
-        List<FAQData> faqs
+        @Valid List<OperatingHoursData> operatingHours,
+        @Valid List<FAQData> faqs
 ) {
 
     public record AddressData(
@@ -36,4 +37,12 @@ public record UpdatePlaceRequest(
     ) {
 
     }
+
+    public record FAQData(
+            @NotBlank String question,
+            @NotBlank String answer
+    ) {
+
+    }
+
 }

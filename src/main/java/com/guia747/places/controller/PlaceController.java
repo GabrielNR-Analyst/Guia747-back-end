@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.guia747.places.dto.CategoryResponse;
 import com.guia747.places.dto.CreateCategoryRequest;
 import com.guia747.places.dto.CreatePlaceRequest;
-import com.guia747.places.dto.PlaceResponse;
+import com.guia747.places.dto.CreatePlaceResponse;
 import com.guia747.places.dto.PlaceDetailsResponse;
 import com.guia747.places.dto.UpdatePlaceRequest;
 import com.guia747.places.entity.Category;
@@ -44,11 +44,11 @@ public class PlaceController {
     }
 
     @PostMapping
-    public ResponseEntity<PlaceResponse> create(@Valid @RequestBody CreatePlaceRequest request,
+    public ResponseEntity<CreatePlaceResponse> create(@Valid @RequestBody CreatePlaceRequest request,
             @AuthenticationPrincipal Jwt jwt) {
         UUID userId = UUID.fromString(jwt.getSubject());
         Place place = placeManagementService.createPlace(userId, request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new PlaceResponse(place.getId()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CreatePlaceResponse(place.getId()));
     }
 
     @PutMapping("/{placeId}")
