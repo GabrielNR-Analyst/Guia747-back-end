@@ -12,10 +12,12 @@ import com.guia747.common.ResourceNotFoundException;
 import com.guia747.places.dto.CreatePlaceRequest;
 import com.guia747.places.dto.OperatingHoursData;
 import com.guia747.places.dto.PlaceDetailsResponse;
+import com.guia747.places.dto.UpdatePlaceRequest;
 import com.guia747.places.entity.Place;
 import com.guia747.places.repository.PlaceRepository;
 import com.guia747.places.vo.Address;
 import com.guia747.places.vo.Contact;
+import com.guia747.places.vo.FAQ;
 import com.guia747.places.vo.OperatingHours;
 
 @Service
@@ -86,6 +88,63 @@ public class DefaultPlaceManagementService implements PlaceManagementService {
                 .orElseThrow(() -> new ResourceNotFoundException("Local não encontrado"));
 
         return PlaceDetailsResponse.from(place);
+    }
+
+    @Override
+    @Transactional
+    public void updatePlace(UUID placeId, UpdatePlaceRequest request) {
+        Place place = placeRepository.findById(placeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Local não encontrado"));
+
+        // Update basic info
+        place.updateBasicInfo(request.name(), request.about());
+
+        // Update address
+        if (request.address() != null) {
+            Address address = createAddress(request.address());
+            place.updateAddress(address);
+        }
+
+        // Update contact
+        if (request.contact() != null) {
+            Contact contact = Contact.createNew(
+                    request.contact().phone(),
+                    request.contact().instagramUrl(),
+                    request.contact().facebookUrl(),
+                    request.contact().whatsappUrl(),
+                    request.contact().email()
+            );
+            place.updateContact(contact);
+        }
+
+        // Update operating hours
+        if (request.operatingHours() != null) {
+            List<OperatingHours> operatingHours = request.operatingHours().stream()
+                    .map(this::createOperatingHours)
+                    .toList();
+            place.updateOperatingHours(operatingHours);
+        }
+
+        // Update faqs
+        if (request.faqs() != null) {
+            List<FAQ> faqs = request.faqs().stream()
+                    .map(faq -> FAQ.createNew(faq.question(), faq.answer()))
+                    .toList();
+            place.updateFaqs(faqs);
+        }
+
+        place.updateMedia(request.youtubeVideoUrl(), request.thumbnailUrl());
+        placeRepository.save(place);
+    }
+
+    private static Address createAddress(UpdatePlaceRequest.AddressData address) {
+        return Address.createNew(
+                address.zipCode(),
+                address.street(),
+                address.number(),
+                address.neighborhood(),
+                address.complement()
+        );
     }
 
     private OperatingHours createOperatingHours(OperatingHoursData data) {

@@ -40,6 +40,7 @@ public class Place extends AggregateRoot<UUID> {
     }
 
     public void updateOperatingHours(List<OperatingHours> operatingHours) {
+        this.operatingHours.clear();
         if (operatingHours != null) {
             this.operatingHours.addAll(operatingHours);
         }
@@ -65,5 +66,18 @@ public class Place extends AggregateRoot<UUID> {
         if (thumbnailUrl != null) {
             this.thumbnailUrl = thumbnailUrl;
         }
+    }
+
+    public void updateBasicInfo(String name, String about) {
+        if (name != null && !name.isBlank()) {
+            this.name = name;
+        }
+        if (about != null && !about.isBlank()) {
+            this.about = about;
+        }
+    }
+
+    public void updateAddress(Address address) {
+        this.address = address;
     }
 }

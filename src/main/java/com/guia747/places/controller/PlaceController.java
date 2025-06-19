@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ import com.guia747.places.dto.CreateCategoryRequest;
 import com.guia747.places.dto.CreatePlaceRequest;
 import com.guia747.places.dto.PlaceResponse;
 import com.guia747.places.dto.PlaceDetailsResponse;
+import com.guia747.places.dto.UpdatePlaceRequest;
 import com.guia747.places.entity.Category;
 import com.guia747.places.entity.Place;
 import com.guia747.places.service.CategoryManagementService;
@@ -47,6 +49,13 @@ public class PlaceController {
         UUID userId = UUID.fromString(jwt.getSubject());
         Place place = placeManagementService.createPlace(userId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new PlaceResponse(place.getId()));
+    }
+
+    @PutMapping("/{placeId}")
+    public ResponseEntity<Void> updatePlace(@PathVariable UUID placeId,
+            @Valid @RequestBody UpdatePlaceRequest request) {
+        placeManagementService.updatePlace(placeId, request);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{placeId}")
