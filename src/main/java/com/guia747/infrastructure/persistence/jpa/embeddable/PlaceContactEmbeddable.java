@@ -1,4 +1,4 @@
-package com.guia747.infrastructure.persistence.jpa.entity;
+package com.guia747.infrastructure.persistence.jpa.embeddable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

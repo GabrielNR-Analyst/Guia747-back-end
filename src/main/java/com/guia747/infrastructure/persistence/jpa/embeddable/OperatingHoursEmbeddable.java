@@ -1,4 +1,4 @@
-package com.guia747.infrastructure.persistence.jpa.entity;
+package com.guia747.infrastructure.persistence.jpa.embeddable;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;

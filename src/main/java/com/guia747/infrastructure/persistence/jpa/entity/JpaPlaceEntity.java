@@ -15,6 +15,10 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import com.guia747.infrastructure.persistence.jpa.embeddable.FAQEmbeddable;
+import com.guia747.infrastructure.persistence.jpa.embeddable.OperatingHoursEmbeddable;
+import com.guia747.infrastructure.persistence.jpa.embeddable.PlaceAddressEmbeddable;
+import com.guia747.infrastructure.persistence.jpa.embeddable.PlaceContactEmbeddable;
 import lombok.Getter;
 import lombok.Setter;
 
