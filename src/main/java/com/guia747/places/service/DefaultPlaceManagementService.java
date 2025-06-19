@@ -2,6 +2,8 @@ package com.guia747.places.service;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.guia747.accounts.domain.UserAccount;
@@ -131,6 +133,13 @@ public class DefaultPlaceManagementService implements PlaceManagementService {
 
         place.updateMedia(request.youtubeVideoUrl(), request.thumbnailUrl());
         placeRepository.save(place);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Place> getAllPlacesByCity(UUID cityId, PageRequest pageable) {
+        cityRepository.findById(cityId).orElseThrow(CityNotFoundException::new);
+        return placeRepository.findByCityId(cityId, pageable);
     }
 
     private static Address createAddress(UpdatePlaceRequest.AddressData address) {

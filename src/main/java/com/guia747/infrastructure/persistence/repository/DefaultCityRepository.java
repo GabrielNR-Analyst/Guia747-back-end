@@ -3,6 +3,7 @@ package com.guia747.infrastructure.persistence.repository;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import com.guia747.cities.entity.City;
@@ -14,6 +15,7 @@ import com.guia747.infrastructure.persistence.jpa.repository.JpaCityRepository;
 import com.guia747.infrastructure.persistence.jpa.specification.CitySpecification;
 import com.guia747.infrastructure.persistence.mapper.CityMapper;
 import com.guia747.infrastructure.persistence.mapper.StateMapper;
+import com.guia747.places.entity.Place;
 
 @Repository
 public class DefaultCityRepository implements CityRepository {

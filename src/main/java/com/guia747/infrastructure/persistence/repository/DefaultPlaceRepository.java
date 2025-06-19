@@ -2,6 +2,8 @@ package com.guia747.infrastructure.persistence.repository;
 
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import com.guia747.infrastructure.persistence.jpa.entity.JpaPlaceEntity;
 import com.guia747.infrastructure.persistence.jpa.repository.PlaceJpaRepository;
@@ -30,5 +32,10 @@ public class DefaultPlaceRepository implements PlaceRepository {
     @Override
     public Optional<Place> findById(UUID placeId) {
         return jpaRepository.findById(placeId).map(mapper::toDomain);
+    }
+
+    @Override
+    public Page<Place> findByCityId(UUID cityId, PageRequest pageable) {
+        return jpaRepository.findByCityId(cityId, pageable).map(mapper::toDomain);
     }
 }
