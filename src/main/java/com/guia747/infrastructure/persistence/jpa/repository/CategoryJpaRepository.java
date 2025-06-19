@@ -10,4 +10,6 @@ public interface CategoryJpaRepository extends JpaRepository<JpaCategoryEntity, 
     boolean existsByNameEqualsIgnoreCase(String name);
 
     List<JpaCategoryEntity> findAllByIdIn(List<UUID> ids);
+
+    boolean existsBySlug(String slug);
 }

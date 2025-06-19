@@ -50,4 +50,9 @@ public class DefaultCityRepository implements CityRepository {
     public Page<City> findAll(String search, Pageable pageable) {
         return jpaRepository.findAll(CitySpecification.withFilters(search), pageable).map(cityMapper::toDomain);
     }
+
+    @Override
+    public boolean existsBySlug(String slug) {
+        return jpaRepository.existsBySlug(slug);
+    }
 }

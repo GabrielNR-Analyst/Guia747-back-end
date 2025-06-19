@@ -16,4 +16,6 @@ public interface CityRepository {
     Page<City> findAllByState(State state, Pageable pageable);
 
     Page<City> findAll(String search, Pageable pageable);
+
+    boolean existsBySlug(String slug);
 }

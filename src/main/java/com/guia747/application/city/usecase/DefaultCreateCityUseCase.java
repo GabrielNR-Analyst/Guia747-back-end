@@ -38,7 +38,7 @@ public class DefaultCreateCityUseCase implements CreateCityUseCase {
         Image thumbnail = imageService.resolve(request.thumbnailUrl());
         Image banner = imageService.resolve(request.bannerUrl());
 
-        String slug = SlugGenerator.generateSlug(request.name());
+        String slug = SlugGenerator.generateSlug(request.name(), cityRepository::existsBySlug);
 
         City newCity = City.createNew(request.name(), state, slug, request.description());
         newCity.updateImages(thumbnail, banner);

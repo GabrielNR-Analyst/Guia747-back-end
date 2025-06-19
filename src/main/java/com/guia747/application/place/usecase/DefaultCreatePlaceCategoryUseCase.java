@@ -25,7 +25,7 @@ public class DefaultCreatePlaceCategoryUseCase implements CreatePlaceCategoryUse
             throw new CategoryAlreadyExistsException(request.name());
         }
 
-        String slug = SlugGenerator.generateSlug(request.name());
+        String slug = SlugGenerator.generateSlug(request.name(), categoryRepository::existsBySlug);
         Category category = Category.createNew(request.name(), slug, request.description());
 
         Category savedCategory = categoryRepository.save(category);

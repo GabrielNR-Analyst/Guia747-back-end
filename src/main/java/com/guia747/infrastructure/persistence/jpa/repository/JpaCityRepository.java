@@ -12,4 +12,6 @@ public interface JpaCityRepository extends JpaRepository<JpaCityEntity, UUID>,
         JpaSpecificationExecutor<JpaCityEntity> {
 
     Page<JpaCityEntity> findByState(JpaStateEntity state, Pageable pageable);
+
+    boolean existsBySlug(String slug);
 }

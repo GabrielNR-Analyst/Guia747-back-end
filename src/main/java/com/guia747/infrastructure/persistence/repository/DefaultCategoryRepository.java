@@ -41,4 +41,9 @@ public class DefaultCategoryRepository implements CategoryRepository {
     public List<Category> findAllByIdIn(List<UUID> ids) {
         return jpaRepository.findAllByIdIn(ids).stream().map(mapper::toDomain).toList();
     }
+
+    @Override
+    public boolean existsBySlug(String slug) {
+        return jpaRepository.existsBySlug(slug);
+    }
 }

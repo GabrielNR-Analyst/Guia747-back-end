@@ -13,4 +13,6 @@ public interface CategoryRepository {
     List<Category> findAll();
 
     List<Category> findAllByIdIn(List<UUID> ids);
+
+    boolean existsBySlug(String slug);
 }
