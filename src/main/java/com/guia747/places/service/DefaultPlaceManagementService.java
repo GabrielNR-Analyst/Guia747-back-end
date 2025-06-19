@@ -16,7 +16,6 @@ import com.guia747.places.entity.Place;
 import com.guia747.places.repository.PlaceRepository;
 import com.guia747.places.vo.Address;
 import com.guia747.places.vo.Contact;
-import com.guia747.places.vo.FAQ;
 import com.guia747.places.vo.OperatingHours;
 
 @Service
@@ -51,7 +50,6 @@ public class DefaultPlaceManagementService implements PlaceManagementService {
         );
 
         Place place = Place.createNew(userAccount, city, request.name(), request.about(), address);
-        place.updateMedia(request.youtubeVideoUrl(), request.thumbnailUrl());
 
         // Update contact
         if (request.contact() != null) {
@@ -76,14 +74,6 @@ public class DefaultPlaceManagementService implements PlaceManagementService {
         // Update categories
         if (request.categoryIds() != null) {
             // TODO
-        }
-
-        // Update FAQs
-        if (request.faqs() != null) {
-            List<FAQ> faqs = request.faqs().stream()
-                    .map(faq -> FAQ.createNew(faq.question(), faq.answer()))
-                    .toList();
-            place.updateFaqs(faqs);
         }
 
         return placeRepository.save(place);

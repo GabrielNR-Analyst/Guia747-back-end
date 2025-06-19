@@ -16,10 +16,7 @@ public record CreatePlaceRequest(
         @Valid ContactData contact,
         // ---
         List<OperatingHoursData> operatingHours,
-        List<FAQData> faqs,
-        Set<UUID> categoryIds,
-        @Size(max = 200) String youtubeVideoUrl,
-        @Size(max = 200) String thumbnailUrl
+        Set<UUID> categoryIds
 ) {
 
 }
