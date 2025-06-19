@@ -1,6 +1,7 @@
 package com.guia747.infrastructure.persistence.repository;
 
 import java.util.List;
+import java.util.UUID;
 import org.springframework.stereotype.Repository;
 import com.guia747.infrastructure.persistence.jpa.entity.JpaCategoryEntity;
 import com.guia747.infrastructure.persistence.jpa.repository.CategoryJpaRepository;
@@ -34,5 +35,10 @@ public class DefaultCategoryRepository implements CategoryRepository {
     @Override
     public List<Category> findAll() {
         return jpaRepository.findAll().stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
+    public List<Category> findAllByIdIn(List<UUID> ids) {
+        return jpaRepository.findAllByIdIn(ids).stream().map(mapper::toDomain).toList();
     }
 }

@@ -80,4 +80,11 @@ public final class Place extends AggregateRoot<UUID> {
     public void updateAddress(Address address) {
         this.address = address;
     }
+
+    public void updateCategories(Set<Category> categories) {
+        this.categories.clear();
+        if (categories != null) {
+            this.categories.addAll(categories);
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.guia747.application.place.usecase;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,10 @@ import com.guia747.accounts.exception.UserNotFoundException;
 import com.guia747.domain.city.entity.City;
 import com.guia747.domain.city.exception.CityNotFoundException;
 import com.guia747.domain.city.repository.CityRepository;
+import com.guia747.domain.places.entity.Category;
 import com.guia747.domain.places.entity.Place;
+import com.guia747.domain.places.exception.CategoryNotFoundException;
+import com.guia747.domain.places.repository.CategoryRepository;
 import com.guia747.domain.places.repository.PlaceRepository;
 import com.guia747.domain.places.valueobject.Address;
 import com.guia747.domain.places.valueobject.Contact;
@@ -25,15 +29,18 @@ public class DefaultCreatePlaceUseCase implements CreatePlaceUseCase {
     private final PlaceRepository placeRepository;
     private final CityRepository cityRepository;
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
 
     public DefaultCreatePlaceUseCase(
             PlaceRepository placeRepository,
             CityRepository cityRepository,
-            UserRepository userRepository
+            UserRepository userRepository,
+            CategoryRepository categoryRepository
     ) {
         this.placeRepository = placeRepository;
         this.cityRepository = cityRepository;
         this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -74,7 +81,13 @@ public class DefaultCreatePlaceUseCase implements CreatePlaceUseCase {
 
         // Update categories
         if (request.categoryIds() != null) {
-            // TODO
+            List<Category> categories = categoryRepository.findAllByIdIn(request.categoryIds());
+
+            if (categories.size() != request.categoryIds().size()) {
+                throw new CategoryNotFoundException();
+            }
+
+            place.updateCategories(new HashSet<>(categories));
         }
 
         Place savedPlace = placeRepository.save(place);

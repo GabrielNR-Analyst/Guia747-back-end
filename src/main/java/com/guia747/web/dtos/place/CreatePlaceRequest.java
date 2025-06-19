@@ -1,7 +1,6 @@
 package com.guia747.web.dtos.place;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
@@ -17,7 +16,7 @@ public record CreatePlaceRequest(
         @NotNull @Valid AddressRequest address,
         @Valid ContactData contact,
         @Valid List<OperatingHoursRequest> operatingHours,
-        Set<UUID> categoryIds
+        List<UUID> categoryIds
 ) {
 
     public record ContactData(

@@ -1,6 +1,7 @@
 package com.guia747.web.dtos.place;
 
 import java.util.List;
+import java.util.UUID;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -13,7 +14,8 @@ public record UpdatePlaceRequest(
         String youtubeVideoUrl,
         String thumbnailUrl,
         @Valid List<OperatingHoursRequest> operatingHours,
-        @Valid List<FAQRequest> faqs
+        @Valid List<FAQRequest> faqs,
+        List<UUID> categoryIds
 ) {
 
     public record AddressRequest(
