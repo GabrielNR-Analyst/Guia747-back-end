@@ -5,8 +5,8 @@ import org.springframework.stereotype.Repository;
 import com.guia747.infrastructure.persistence.jpa.entity.JpaCategoryEntity;
 import com.guia747.infrastructure.persistence.jpa.repository.CategoryJpaRepository;
 import com.guia747.infrastructure.persistence.mapper.CategoryJpaMapper;
-import com.guia747.places.entity.Category;
-import com.guia747.places.repository.CategoryRepository;
+import com.guia747.domain.places.entity.Category;
+import com.guia747.domain.places.repository.CategoryRepository;
 
 @Repository
 public class DefaultCategoryRepository implements CategoryRepository {

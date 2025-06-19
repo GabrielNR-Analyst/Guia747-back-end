@@ -2,8 +2,8 @@ package com.guia747.infrastructure.persistence.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import com.guia747.cities.entity.City;
-import com.guia747.cities.vo.Image;
+import com.guia747.domain.city.entity.City;
+import com.guia747.domain.city.valueobject.Image;
 import com.guia747.infrastructure.config.GlobalMapperConfig;
 import com.guia747.infrastructure.persistence.jpa.entity.JpaCityEntity;
 

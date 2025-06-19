@@ -1,6 +1,6 @@
 package com.guia747.accounts.exception;
 
-import com.guia747.common.ResourceNotFoundException;
+import com.guia747.shared.exception.ResourceNotFoundException;
 
 public class UserNotFoundException extends ResourceNotFoundException {
 

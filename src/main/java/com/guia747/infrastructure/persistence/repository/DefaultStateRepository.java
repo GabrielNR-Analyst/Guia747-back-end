@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Repository;
-import com.guia747.cities.entity.State;
-import com.guia747.cities.repository.StateRepository;
+import com.guia747.domain.city.entity.State;
+import com.guia747.domain.city.repository.StateRepository;
 import com.guia747.infrastructure.persistence.jpa.repository.JpaStateRepository;
 import com.guia747.infrastructure.persistence.mapper.StateMapper;
 

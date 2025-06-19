@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import com.guia747.infrastructure.persistence.jpa.entity.JpaPlaceEntity;
 import com.guia747.infrastructure.persistence.jpa.repository.PlaceJpaRepository;
 import com.guia747.infrastructure.persistence.mapper.PlaceJpaMapper;
-import com.guia747.places.entity.Place;
-import com.guia747.places.repository.PlaceRepository;
+import com.guia747.domain.places.entity.Place;
+import com.guia747.domain.places.repository.PlaceRepository;
 
 @Repository
 public class DefaultPlaceRepository implements PlaceRepository {

@@ -8,11 +8,11 @@ import com.guia747.infrastructure.persistence.jpa.embeddable.FAQEmbeddable;
 import com.guia747.infrastructure.persistence.jpa.embeddable.OperatingHoursEmbeddable;
 import com.guia747.infrastructure.persistence.jpa.embeddable.ContactEmbeddable;
 import com.guia747.infrastructure.persistence.jpa.entity.JpaPlaceEntity;
-import com.guia747.places.entity.Place;
-import com.guia747.places.vo.Address;
-import com.guia747.places.vo.Contact;
-import com.guia747.places.vo.FAQ;
-import com.guia747.places.vo.OperatingHours;
+import com.guia747.domain.places.entity.Place;
+import com.guia747.domain.places.valueobject.Address;
+import com.guia747.domain.places.valueobject.Contact;
+import com.guia747.domain.places.valueobject.FAQ;
+import com.guia747.domain.places.valueobject.OperatingHours;
 
 @Mapper(config = GlobalMapperConfig.class, uses = {UserMapper.class, CategoryJpaMapper.class, CityMapper.class})
 public interface PlaceJpaMapper {
