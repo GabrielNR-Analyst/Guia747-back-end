@@ -7,4 +7,5 @@
     <include file="/db/changelog/changes/0002_create_cities_and_states_tables.xml"/>
     <include file="/db/changelog/changes/0003_add_states_data.xml"/>
     <include file="/db/changelog/changes/0004_create_places_and_categories_tables.xml"/>
+    <include file="/db/changelog/changes/0005_add_email_and_geolocation_columns_to_places_table.xml"/>
 </databaseChangeLog>

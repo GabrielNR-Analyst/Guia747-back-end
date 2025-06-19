@@ -5,9 +5,9 @@ import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
 
-@Embeddable
 @Getter
 @Setter
+@Embeddable
 public class ContactEmbeddable {
 
     @Column(name = "phone_number", length = 20)
@@ -21,4 +21,7 @@ public class ContactEmbeddable {
 
     @Column(name = "whatsapp_url")
     private String whatsappUrl;
+
+    @Column(name = "email")
+    private String email;
 }

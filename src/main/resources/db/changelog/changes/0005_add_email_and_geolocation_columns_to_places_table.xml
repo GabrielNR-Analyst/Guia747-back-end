@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1" author="Guilherme Oliveira">
+        <addColumn tableName="places">
+            <column name="latitude" type="DECIMAL(9,6)"/>
+            <column name="longitude" type="DECIMAL(9,6)"/>
+            <column name="email" type="VARCHAR(255)"/>
+        </addColumn>
+        <dropNotNullConstraint tableName="places" columnName="number"/>
+    </changeSet>
+</databaseChangeLog>
