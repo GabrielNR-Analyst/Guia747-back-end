@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.guia747.application.city.query.GetAllCitiesQuery;
 import com.guia747.application.city.query.GetAllCitiesQueryHandler;
+import com.guia747.application.city.query.GetCityByIdQueryHandler;
 import com.guia747.application.city.usecase.CreateCityUseCase;
 import com.guia747.application.city.usecase.UpdateCityUseCase;
 import com.guia747.web.dtos.city.GetAllCitiesResponse;
@@ -45,6 +46,7 @@ public class CityController {
     private final CreateCityUseCase createCityUseCase;
     private final UpdateCityUseCase updateCityUseCase;
     private final GetAllCitiesQueryHandler getAllCitiesQueryHandler;
+    private final GetCityByIdQueryHandler getCityByIdQueryHandler;
 
     @Operation(
             summary = "Create a new city",
@@ -61,6 +63,12 @@ public class CityController {
     public ResponseEntity<CreateCityResponse> createCity(@Valid @RequestBody CreateCityRequest request) {
         CreateCityResponse response = createCityUseCase.execute(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/{cityId}")
+    public ResponseEntity<CityDetailsResponse> getCityById(@PathVariable UUID cityId) {
+        CityDetailsResponse response = getCityByIdQueryHandler.handle(cityId);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
