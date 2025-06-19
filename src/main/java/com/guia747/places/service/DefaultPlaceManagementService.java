@@ -6,14 +6,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.guia747.accounts.domain.UserAccount;
 import com.guia747.accounts.domain.UserRepository;
+import com.guia747.accounts.exception.UserNotFoundException;
 import com.guia747.cities.entity.City;
+import com.guia747.cities.exception.CityNotFoundException;
 import com.guia747.cities.repository.CityRepository;
-import com.guia747.common.ResourceNotFoundException;
 import com.guia747.places.dto.CreatePlaceRequest;
 import com.guia747.places.dto.OperatingHoursData;
 import com.guia747.places.dto.PlaceDetailsResponse;
 import com.guia747.places.dto.UpdatePlaceRequest;
 import com.guia747.places.entity.Place;
+import com.guia747.places.exception.PlaceNotFoundException;
 import com.guia747.places.repository.PlaceRepository;
 import com.guia747.places.vo.Address;
 import com.guia747.places.vo.Contact;
@@ -37,11 +39,8 @@ public class DefaultPlaceManagementService implements PlaceManagementService {
     @Override
     @Transactional
     public Place createPlace(UUID userId, CreatePlaceRequest request) {
-        UserAccount userAccount = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado."));
-
-        City city = cityRepository.findById(request.cityId())
-                .orElseThrow(() -> new ResourceNotFoundException("Cidade não encontrada."));
+        UserAccount userAccount = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        City city = cityRepository.findById(request.cityId()).orElseThrow(CityNotFoundException::new);
 
         Address address = Address.createNew(
                 request.address().zipCode(),
@@ -84,17 +83,14 @@ public class DefaultPlaceManagementService implements PlaceManagementService {
     @Override
     @Transactional(readOnly = true)
     public PlaceDetailsResponse getPlaceDetail(UUID placeId) {
-        Place place = placeRepository.findById(placeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Local não encontrado"));
-
+        Place place = placeRepository.findById(placeId).orElseThrow(PlaceNotFoundException::new);
         return PlaceDetailsResponse.from(place);
     }
 
     @Override
     @Transactional
     public void updatePlace(UUID placeId, UpdatePlaceRequest request) {
-        Place place = placeRepository.findById(placeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Local não encontrado"));
+        Place place = placeRepository.findById(placeId).orElseThrow(PlaceNotFoundException::new);
 
         // Update basic info
         place.updateBasicInfo(request.name(), request.about());

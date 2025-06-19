@@ -23,8 +23,7 @@ public class DefaultCategoryManagementService implements CategoryManagementServi
     @Transactional
     public Category createCategory(CreateCategoryRequest request) {
         if (categoryRepository.existsByName(request.name())) {
-            throw new CategoryAlreadyExistsException(
-                    "A categoria com o nome '" + request.name() + "' já existe. Por favor, escolha outro nome.");
+            throw new CategoryAlreadyExistsException(request.name());
         }
 
         String slug = SlugGenerator.generateSlug(request.name());

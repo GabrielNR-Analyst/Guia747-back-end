@@ -16,10 +16,11 @@ import com.guia747.cities.dto.ImageRequest;
 import com.guia747.cities.dto.UpdateCityRequest;
 import com.guia747.cities.entity.City;
 import com.guia747.cities.entity.State;
+import com.guia747.cities.exception.CityNotFoundException;
+import com.guia747.cities.exception.StateNotFoundException;
 import com.guia747.cities.repository.CityRepository;
 import com.guia747.cities.repository.StateRepository;
 import com.guia747.cities.vo.Image;
-import com.guia747.common.ResourceNotFoundException;
 import com.guia747.infrastructure.util.SlugGenerator;
 
 @Service
@@ -36,8 +37,7 @@ public class DefaultCityManagementService implements CityManagementService {
     @Override
     @Transactional
     public City createCity(CreateCityRequest request) {
-        State state = stateRepository.findById(request.stateId())
-                .orElseThrow(() -> new ResourceNotFoundException("Estado não encontrado"));
+        State state = stateRepository.findById(request.stateId()).orElseThrow(StateNotFoundException::new);
 
         Image thumbnail = getImageFromUrl(request.thumbnail());
         Image banner = getImageFromUrl(request.banner());
@@ -53,8 +53,7 @@ public class DefaultCityManagementService implements CityManagementService {
     @Override
     @Transactional
     public Page<City> getAllCitiesByUf(String uf, Pageable pageable) {
-        State state = stateRepository.findByUf(uf)
-                .orElseThrow(() -> new ResourceNotFoundException("Estado não encontrado"));
+        State state = stateRepository.findByUf(uf).orElseThrow(StateNotFoundException::new);
 
         return cityRepository.findAllByState(state, pageable);
     }
@@ -69,8 +68,7 @@ public class DefaultCityManagementService implements CityManagementService {
     @Override
     @Transactional
     public City updateCity(UUID cityId, UpdateCityRequest request) {
-        City city = cityRepository.findById(cityId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cidade não encontrada"));
+        City city = cityRepository.findById(cityId).orElseThrow(CityNotFoundException::new);
 
         city.updateDetails(request.description(), request.about());
 
