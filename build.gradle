@@ -1,82 +1,67 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.0'
+    id 'org.springframework.boot' version '3.5.0' apply false
     id 'io.spring.dependency-management' version '1.1.7'
     id 'checkstyle'
     id 'jacoco'
 }
 
-group = 'com.guia747'
-version = '0.0.1-SNAPSHOT'
+allprojects {
+    group = 'com.guia747'
+    version = '0.0.1-SNAPSHOT'
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+    repositories {
+        mavenCentral()
     }
 }
 
-repositories {
-    mavenCentral()
-}
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'checkstyle'
+    apply plugin: 'jacoco'
 
-dependencyManagement {
-    dependencies {
-        dependency 'org.mapstruct:mapstruct:1.6.3'
-        dependency 'org.mapstruct:mapstruct-processor:1.6.3'
-        dependency 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8'
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
     }
-}
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
     }
-}
 
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
+    dependencyManagement {
+        dependencies {
+            dependency 'org.mapstruct:mapstruct:1.6.3'
+            dependency 'org.mapstruct:mapstruct-processor:1.6.3'
+            dependency 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8'
+        }
     }
-}
 
-dependencies {
-    implementation 'org.mapstruct:mapstruct'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor 'org.mapstruct:mapstruct-processor'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    testImplementation 'org.springframework.security:spring-security-test'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
-    implementation 'org.liquibase:liquibase-core'
-    runtimeOnly 'org.postgresql:postgresql'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
-checkstyle {
-    toolVersion = "10.12.4"
-    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
-}
-
-jacoco {
-    toolVersion = "0.8.13"
-    reportsDirectory = layout.buildDirectory.dir("reports/jacoco")
-}
-
-jacocoTestReport {
-    dependsOn test
-    reports {
-        html.required = true
-        xml.required = true
-        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+    test {
+        useJUnitPlatform()
     }
+
+    checkstyle {
+        toolVersion = "10.12.4"
+        configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+    }
+
+    jacoco {
+        toolVersion = "0.8.13"
+        reportsDirectory = layout.buildDirectory.dir("reports/jacoco")
+    }
+
+    jacocoTestReport {
+        dependsOn test
+        reports {
+            html.required = true
+            xml.required = true
+            html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+        }
+    }
+
 }

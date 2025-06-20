@@ -39,7 +39,7 @@ class DefaultUserAccountServiceTest {
 
         UserAccount existingUser = UserAccount.createFromOAuth2Profile(userProfile);
 
-        Mockito.when(userRepository.findBySocialProvider("google", TEST_PROVIDER_ID))
+        when(userRepository.findBySocialProvider("google", TEST_PROVIDER_ID))
                 .thenReturn(Optional.of(existingUser));
 
         UserAccount result = userAccountService.findOrCreateFromOAuth2(userProfile);

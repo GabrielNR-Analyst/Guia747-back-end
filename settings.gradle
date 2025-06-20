@@ -1,1 +1,3 @@
 rootProject.name = 'guia747'
+
+include ':server'
