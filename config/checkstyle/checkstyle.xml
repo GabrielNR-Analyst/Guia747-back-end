@@ -90,18 +90,11 @@
             <property name="braceAdjustment" value="0"/>
             <property name="caseIndent" value="4"/>
             <property name="throwsIndent" value="4"/>
-            <property name="arrayInitIndent" value="4"/>
+            <property name="arrayInitIndent" value="8"/>
             <property name="lineWrappingIndentation" value="4"/>
         </module>
         <module name="OuterTypeFilename"/>
         <module name="OverloadMethodsDeclarationOrder"/>
-        <module name="ParameterNumber">
-            <property name="max" value="7"/>
-        </module>
-        <module name="ReturnCount">
-            <property name="max" value="2"/>
-        </module>
         <module name="TodoComment"/>
-        <module name="TrailingComment"/>
     </module>
 </module>

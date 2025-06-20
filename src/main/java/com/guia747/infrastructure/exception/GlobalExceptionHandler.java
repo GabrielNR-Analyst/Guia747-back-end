@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import com.guia747.authentication.exception.InvalidRefreshTokenException;
+import com.guia747.shared.exception.AbstractApiException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -84,5 +85,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+    }
+
+    @ExceptionHandler(AbstractApiException.class)
+    public ResponseEntity<ApiErrorResponse> handleApiException(AbstractApiException ex) {
+        ApiErrorResponse response = ApiErrorResponse.status(ex.getHttpStatus())
+                .error(ex.getErrorCode())
+                .message(ex.getMessage())
+                .build();
+
+        return ResponseEntity.status(ex.getHttpStatus()).body(response);
     }
 }

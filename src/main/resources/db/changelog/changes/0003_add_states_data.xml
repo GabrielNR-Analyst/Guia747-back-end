@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="4" author="Guilherme Oliveira">
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"/>
+            <column name="name" value="Acre"/>
+            <column name="uf" value="AC"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12"/>
+            <column name="name" value="Alagoas"/>
+            <column name="uf" value="AL"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13"/>
+            <column name="name" value="Amapá"/>
+            <column name="uf" value="AP"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14"/>
+            <column name="name" value="Amazonas"/>
+            <column name="uf" value="AM"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15"/>
+            <column name="name" value="Bahia"/>
+            <column name="uf" value="BA"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a16"/>
+            <column name="name" value="Ceará"/>
+            <column name="uf" value="CE"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a17"/>
+            <column name="name" value="Distrito Federal"/>
+            <column name="uf" value="DF"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a18"/>
+            <column name="name" value="Espírito Santo"/>
+            <column name="uf" value="ES"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a19"/>
+            <column name="name" value="Goiás"/>
+            <column name="uf" value="GO"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a20"/>
+            <column name="name" value="Maranhão"/>
+            <column name="uf" value="MA"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21"/>
+            <column name="name" value="Mato Grosso"/>
+            <column name="uf" value="MT"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22"/>
+            <column name="name" value="Mato Grosso do Sul"/>
+            <column name="uf" value="MS"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a23"/>
+            <column name="name" value="Minas Gerais"/>
+            <column name="uf" value="MG"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a24"/>
+            <column name="name" value="Pará"/>
+            <column name="uf" value="PA"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a25"/>
+            <column name="name" value="Paraíba"/>
+            <column name="uf" value="PB"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a26"/>
+            <column name="name" value="Paraná"/>
+            <column name="uf" value="PR"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a27"/>
+            <column name="name" value="Pernambuco"/>
+            <column name="uf" value="PE"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a28"/>
+            <column name="name" value="Piauí"/>
+            <column name="uf" value="PI"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a29"/>
+            <column name="name" value="Rio de Janeiro"/>
+            <column name="uf" value="RJ"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a30"/>
+            <column name="name" value="Rio Grande do Norte"/>
+            <column name="uf" value="RN"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a31"/>
+            <column name="name" value="Rio Grande do Sul"/>
+            <column name="uf" value="RS"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a32"/>
+            <column name="name" value="Rondônia"/>
+            <column name="uf" value="RO"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33"/>
+            <column name="name" value="Roraima"/>
+            <column name="uf" value="RR"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a34"/>
+            <column name="name" value="Santa Catarina"/>
+            <column name="uf" value="SC"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a35"/>
+            <column name="name" value="São Paulo"/>
+            <column name="uf" value="SP"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a36"/>
+            <column name="name" value="Sergipe"/>
+            <column name="uf" value="SE"/>
+        </insert>
+        <insert tableName="states">
+            <column name="id" value="a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a37"/>
+            <column name="name" value="Tocantins"/>
+            <column name="uf" value="TO"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

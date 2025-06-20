@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1" author="guilherme-oliveira">
+        <createTable tableName="states">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_states"/>
+            </column>
+            <column name="name" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="uf" type="VARCHAR(2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint columnNames="name" constraintName="uc_states_name" tableName="states"/>
+        <addUniqueConstraint columnNames="uf" constraintName="uc_states_uf" tableName="states"/>
+    </changeSet>
+    <changeSet id="2" author="admin">
+        <createTable tableName="cities">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_cities"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="state_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="slug" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(320)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="about" type="VARCHAR(2000)"/>
+            <column name="thumbnail_url" type="VARCHAR(500)"/>
+            <column name="thumbnail_width" type="INT"/>
+            <column name="thumbnail_height" type="INT"/>
+            <column name="banner_url" type="VARCHAR(500)"/>
+            <column name="banner_width" type="INT"/>
+            <column name="banner_height" type="INT"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint columnNames="slug" constraintName="uc_cities_slug" tableName="cities"/>
+        <createIndex indexName="idx_city_name" tableName="cities">
+            <column name="name"/>
+        </createIndex>
+        <createIndex indexName="idx_city_name_state_id" tableName="cities">
+            <column name="name"/>
+            <column name="state_id"/>
+        </createIndex>
+        <createIndex indexName="idx_city_slug" tableName="cities">
+            <column name="slug"/>
+        </createIndex>
+        <addForeignKeyConstraint baseColumnNames="state_id" baseTableName="cities" constraintName="FK_CITIES_ON_STATE"
+                                 referencedColumnNames="id" referencedTableName="states"/>
+        <createIndex indexName="idx_city_state_id" tableName="cities">
+            <column name="state_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

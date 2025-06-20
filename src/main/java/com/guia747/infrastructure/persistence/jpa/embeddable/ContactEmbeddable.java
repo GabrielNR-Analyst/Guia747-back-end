@@ -1,0 +1,27 @@
+package com.guia747.infrastructure.persistence.jpa.embeddable;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Embeddable
+public class ContactEmbeddable {
+
+    @Column(name = "phone_number", length = 20)
+    private String phoneNumber;
+
+    @Column(name = "instagram_url")
+    private String instagramUrl;
+
+    @Column(name = "facebook_url")
+    private String facebookUrl;
+
+    @Column(name = "whatsapp_url")
+    private String whatsappUrl;
+
+    @Column(name = "email")
+    private String email;
+}

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1" author="guilherme oliveira">
+        <createTable tableName="categories">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_categories"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="slug" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(500)"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint columnNames="name" constraintName="uc_categories_name" tableName="categories"/>
+        <addUniqueConstraint columnNames="slug" constraintName="uc_categories_slug" tableName="categories"/>
+    </changeSet>
+    <changeSet id="2" author="Guilherme Oliveira">
+        <createTable tableName="places">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_places"/>
+            </column>
+            <column name="user_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="about" type="VARCHAR(500)"/>
+
+            <column name="youtube_video_url" type="VARCHAR(500)"/>
+            <column name="thumbnail_url" type="VARCHAR(500)"/>
+
+            <column name="zip_code" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="street" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="number" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="neighborhood" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="complement" type="VARCHAR(100)"/>
+
+            <column name="phone_number" type="VARCHAR(20)"/>
+            <column name="instagram_url" type="VARCHAR(255)"/>
+            <column name="facebook_url" type="VARCHAR(255)"/>
+            <column name="whatsapp_url" type="VARCHAR(255)"/>
+
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex indexName="idx_place_name" tableName="places">
+            <column name="name"/>
+        </createIndex>
+        <addForeignKeyConstraint baseColumnNames="city_id" baseTableName="places" constraintName="FK_PLACES_ON_CITY"
+                                 referencedColumnNames="id" referencedTableName="cities"/>
+        <createIndex indexName="idx_place_city_id" tableName="places">
+            <column name="city_id"/>
+        </createIndex>
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="places" constraintName="FK_PLACES_ON_USER"
+                                 referencedColumnNames="id" referencedTableName="user_accounts"/>
+        <createIndex indexName="idx_place_user_id" tableName="places">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="3" author="guilherme oliveira">
+        <createTable tableName="place_categories">
+            <column name="category_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_place_categories"/>
+            </column>
+            <column name="place_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_place_categories"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="category_id" baseTableName="place_categories"
+                                 constraintName="fk_placat_on_jpa_category_entity" referencedColumnNames="id"
+                                 referencedTableName="categories"/>
+        <addForeignKeyConstraint baseColumnNames="place_id" baseTableName="place_categories"
+                                 constraintName="fk_placat_on_jpa_place_entity" referencedColumnNames="id"
+                                 referencedTableName="places"/>
+    </changeSet>
+    <changeSet id="4" author="guilherme oliveira">
+        <createTable tableName="place_faqs">
+            <column name="place_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="question" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="answer" type="VARCHAR(2000)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="place_id" baseTableName="place_faqs"
+                                 constraintName="fk_place_faqs_on_jpa_place_entity" referencedColumnNames="id"
+                                 referencedTableName="places"/>
+    </changeSet>
+    <changeSet id="5" author="Guilherme Oliveira">
+        <createTable tableName="place_operating_hours">
+            <column name="place_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="day_of_week" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="open_time" type="TIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="close_time" type="TIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="place_id" baseTableName="place_operating_hours"
+                                 constraintName="fk_place_operating_hours_on_jpa_place_entity"
+                                 referencedColumnNames="id" referencedTableName="places"/>
+    </changeSet>
+</databaseChangeLog>

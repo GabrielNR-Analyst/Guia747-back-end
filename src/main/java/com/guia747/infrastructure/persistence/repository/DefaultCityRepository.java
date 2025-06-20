@@ -1,0 +1,58 @@
+package com.guia747.infrastructure.persistence.repository;
+
+import java.util.Optional;
+import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+import com.guia747.domain.city.entity.City;
+import com.guia747.domain.city.entity.State;
+import com.guia747.domain.city.repository.CityRepository;
+import com.guia747.infrastructure.persistence.jpa.entity.JpaCityEntity;
+import com.guia747.infrastructure.persistence.jpa.entity.JpaStateEntity;
+import com.guia747.infrastructure.persistence.jpa.repository.JpaCityRepository;
+import com.guia747.infrastructure.persistence.jpa.specification.CitySpecification;
+import com.guia747.infrastructure.persistence.mapper.CityMapper;
+import com.guia747.infrastructure.persistence.mapper.StateMapper;
+
+@Repository
+public class DefaultCityRepository implements CityRepository {
+
+    private final JpaCityRepository jpaRepository;
+    private final CityMapper cityMapper;
+    private final StateMapper stateMapper;
+
+    public DefaultCityRepository(JpaCityRepository jpaRepository, CityMapper cityMapper, StateMapper stateMapper) {
+        this.jpaRepository = jpaRepository;
+        this.cityMapper = cityMapper;
+        this.stateMapper = stateMapper;
+    }
+
+    @Override
+    public City save(City city) {
+        JpaCityEntity entity = cityMapper.toEntity(city);
+        JpaCityEntity savedCity = jpaRepository.save(entity);
+        return cityMapper.toDomain(savedCity);
+    }
+
+    @Override
+    public Optional<City> findById(UUID id) {
+        return jpaRepository.findById(id).map(cityMapper::toDomain);
+    }
+
+    @Override
+    public Page<City> findAllByState(State state, Pageable pageable) {
+        JpaStateEntity entity = stateMapper.toEntity(state);
+        return jpaRepository.findByState(entity, pageable).map(cityMapper::toDomain);
+    }
+
+    @Override
+    public Page<City> findAll(String search, Pageable pageable) {
+        return jpaRepository.findAll(CitySpecification.withFilters(search), pageable).map(cityMapper::toDomain);
+    }
+
+    @Override
+    public boolean existsBySlug(String slug) {
+        return jpaRepository.existsBySlug(slug);
+    }
+}
