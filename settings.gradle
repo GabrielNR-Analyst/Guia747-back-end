@@ -1,3 +1,5 @@
 rootProject.name = 'guia747'
 
 include ':server'
+include ':integration-tests'
+include ':test-fixtures'

@@ -1,0 +1,4 @@
+dependencies {
+    implementation project(':server')
+    testImplementation testFixtures(project(':test-fixtures'))
+}
