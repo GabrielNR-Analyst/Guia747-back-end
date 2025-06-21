@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.guia747.accounts.domain.UserAccount;
-import com.guia747.accounts.domain.UserRepository;
-import com.guia747.accounts.exception.UserNotFoundException;
+import com.guia747.domain.users.entity.User;
+import com.guia747.domain.users.repository.UserRepository;
+import com.guia747.domain.users.exception.UserNotFoundException;
 import com.guia747.domain.city.entity.City;
 import com.guia747.domain.city.exception.CityNotFoundException;
 import com.guia747.domain.city.repository.CityRepository;
@@ -46,7 +46,7 @@ public class DefaultCreatePlaceUseCase implements CreatePlaceUseCase {
     @Override
     @Transactional
     public CreatePlaceResponse execute(UUID ownerId, CreatePlaceRequest request) {
-        UserAccount userAccount = userRepository.findById(ownerId).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(ownerId).orElseThrow(UserNotFoundException::new);
         City city = cityRepository.findById(request.cityId()).orElseThrow(CityNotFoundException::new);
 
         Address address = Address.createNew(
@@ -57,7 +57,7 @@ public class DefaultCreatePlaceUseCase implements CreatePlaceUseCase {
                 request.address().complement()
         );
 
-        Place place = Place.createNew(userAccount, city, request.name(), request.about(), address);
+        Place place = Place.createNew(user, city, request.name(), request.about(), address);
 
         // Update contact
         if (request.contact() != null) {

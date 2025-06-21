@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import com.guia747.accounts.domain.UserAccount;
+import com.guia747.domain.users.entity.User;
 import com.guia747.domain.city.entity.City;
 import com.guia747.shared.AggregateRoot;
 import com.guia747.domain.places.valueobject.Address;
@@ -19,7 +19,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public final class Place extends AggregateRoot<UUID> {
 
-    private UserAccount user;
+    private User user;
     private City city;
 
     private String name;
@@ -34,7 +34,7 @@ public final class Place extends AggregateRoot<UUID> {
     private Set<Category> categories;
     private List<FAQ> faqs;
 
-    public static Place createNew(UserAccount user, City city, String name, String about, Address address) {
+    public static Place createNew(User user, City city, String name, String about, Address address) {
         return new Place(user, city, name, about, address, null, null, null, new ArrayList<>(), new HashSet<>(),
                 new ArrayList<>());
     }

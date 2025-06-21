@@ -1,8 +1,8 @@
 package com.guia747.infrastructure.security;
 
-import com.guia747.accounts.domain.UserAccount;
+import com.guia747.domain.users.entity.User;
 
 public interface JwtTokenService {
 
-    JwtTokenPair generateTokenPair(UserAccount userAccount);
+    JwtTokenPair generateTokenPair(User user);
 }

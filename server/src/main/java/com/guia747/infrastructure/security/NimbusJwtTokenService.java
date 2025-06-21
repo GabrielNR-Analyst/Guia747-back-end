@@ -8,7 +8,7 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
-import com.guia747.accounts.domain.UserAccount;
+import com.guia747.domain.users.entity.User;
 import com.guia747.infrastructure.config.JwtProperties;
 
 @Service
@@ -28,14 +28,14 @@ public class NimbusJwtTokenService implements JwtTokenService {
     }
 
     @Override
-    public JwtTokenPair generateTokenPair(UserAccount userAccount) {
+    public JwtTokenPair generateTokenPair(User user) {
         JwsHeader headers = JwsHeader.with(MacAlgorithm.HS256).build();
 
         Instant now = Instant.now();
         Instant expiration = now.plus(jwtProperties.getAccessTokenTtl());
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .subject(userAccount.getId().toString())
+                .subject(user.getId().toString())
                 .issuedAt(now)
                 .expiresAt(expiration)
                 .build();

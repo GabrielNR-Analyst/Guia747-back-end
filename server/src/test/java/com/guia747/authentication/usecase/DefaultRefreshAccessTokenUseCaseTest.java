@@ -11,13 +11,14 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.guia747.accounts.domain.UserAccount;
-import com.guia747.accounts.domain.UserRepository;
-import com.guia747.authentication.command.RefreshAccessTokenCommand;
-import com.guia747.authentication.domain.RefreshTokenSession;
-import com.guia747.authentication.dto.AuthenticationResponse;
-import com.guia747.authentication.exception.InvalidRefreshTokenException;
-import com.guia747.authentication.repository.RefreshTokenRepository;
+import com.guia747.application.authentication.usecase.impl.DefaultRefreshAccessTokenUseCase;
+import com.guia747.domain.users.entity.User;
+import com.guia747.domain.users.repository.UserRepository;
+import com.guia747.application.authentication.command.RefreshAccessTokenCommand;
+import com.guia747.domain.authentication.entity.RefreshTokenSession;
+import com.guia747.web.dtos.authentication.AuthenticationResponse;
+import com.guia747.domain.authentication.exception.InvalidRefreshTokenException;
+import com.guia747.domain.authentication.repository.RefreshTokenRepository;
 import com.guia747.infrastructure.security.JwtTokenPair;
 import com.guia747.infrastructure.security.JwtTokenService;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,7 +52,7 @@ class DefaultRefreshAccessTokenUseCaseTest {
 
     private RefreshAccessTokenCommand command;
     private RefreshTokenSession existingRefreshToken;
-    private UserAccount userAccount;
+    private User user;
     private JwtTokenPair newTokenPair;
 
     private static final String TEST_EXISTING_REFRESH_TOKEN = "refreshToken";
@@ -72,8 +73,8 @@ class DefaultRefreshAccessTokenUseCaseTest {
                 .userAgent("Old Browser")
                 .build();
 
-        userAccount = mock(UserAccount.class);
-        lenient().when(userAccount.getId()).thenReturn(accountId);
+        user = mock(User.class);
+        lenient().when(user.getId()).thenReturn(accountId);
 
         newTokenPair = new JwtTokenPair(
                 newAccessToken,
@@ -88,14 +89,14 @@ class DefaultRefreshAccessTokenUseCaseTest {
         when(refreshTokenRepository.findByRefreshToken(command.refreshToken()))
                 .thenReturn(Optional.of(existingRefreshToken));
         when(userRepository.findById(existingRefreshToken.getAccountId()))
-                .thenReturn(Optional.of(userAccount));
-        when(jwtTokenService.generateTokenPair(userAccount))
+                .thenReturn(Optional.of(user));
+        when(jwtTokenService.generateTokenPair(user))
                 .thenReturn(newTokenPair);
 
         AuthenticationResponse response = useCase.execute(command);
 
         assertThat(response).isNotNull();
-        assertThat(response.accountId()).isEqualTo(userAccount.getId());
+        assertThat(response.accountId()).isEqualTo(user.getId());
         assertThat(response.accessToken()).isEqualTo(newTokenPair.accessToken());
         assertThat(response.expiresIn()).isEqualTo(newTokenPair.accessTokenTtl().toSeconds());
         assertThat(response.refreshToken()).isEqualTo(newTokenPair.refreshToken());
@@ -104,7 +105,7 @@ class DefaultRefreshAccessTokenUseCaseTest {
 
         verify(refreshTokenRepository).findByRefreshToken(command.refreshToken());
         verify(userRepository).findById(existingRefreshToken.getAccountId());
-        verify(jwtTokenService).generateTokenPair(userAccount);
+        verify(jwtTokenService).generateTokenPair(user);
         verify(refreshTokenRepository).saveRefreshToken(any(RefreshTokenSession.class),
                 eq(newTokenPair.refreshTokenTtl()));
         verify(refreshTokenRepository).deleteRefreshToken(existingRefreshToken.getTokenValue());
@@ -115,8 +116,8 @@ class DefaultRefreshAccessTokenUseCaseTest {
         when(refreshTokenRepository.findByRefreshToken(command.refreshToken()))
                 .thenReturn(Optional.of(existingRefreshToken));
         when(userRepository.findById(existingRefreshToken.getAccountId()))
-                .thenReturn(Optional.of(userAccount));
-        when(jwtTokenService.generateTokenPair(userAccount))
+                .thenReturn(Optional.of(user));
+        when(jwtTokenService.generateTokenPair(user))
                 .thenReturn(newTokenPair);
 
         useCase.execute(command);
@@ -125,7 +126,7 @@ class DefaultRefreshAccessTokenUseCaseTest {
                 eq(newTokenPair.refreshTokenTtl()));
 
         RefreshTokenSession capturedSession = refreshTokenSessionCaptor.getValue();
-        assertThat(capturedSession.getAccountId()).isEqualTo(userAccount.getId());
+        assertThat(capturedSession.getAccountId()).isEqualTo(user.getId());
         assertThat(capturedSession.getTokenValue()).isEqualTo(newTokenPair.refreshToken());
         assertThat(capturedSession.getIpAddress()).isEqualTo(command.ipAddress());
         assertThat(capturedSession.getUserAgent()).isEqualTo(command.userAgent());

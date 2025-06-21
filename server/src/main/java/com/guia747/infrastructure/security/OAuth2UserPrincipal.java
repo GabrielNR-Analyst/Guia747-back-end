@@ -4,14 +4,14 @@ import java.util.Collection;
 import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import com.guia747.accounts.domain.UserAccount;
+import com.guia747.domain.users.entity.User;
 
 public class OAuth2UserPrincipal implements UserDetails {
 
-    private final UserAccount userAccount;
+    private final User user;
 
-    public OAuth2UserPrincipal(UserAccount userAccount) {
-        this.userAccount = userAccount;
+    public OAuth2UserPrincipal(User user) {
+        this.user = user;
     }
 
     @Override
@@ -26,10 +26,10 @@ public class OAuth2UserPrincipal implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userAccount.getEmail();
+        return user.getEmail();
     }
 
-    public UserAccount getUserAccount() {
-        return userAccount;
+    public User getUserAccount() {
+        return user;
     }
 }

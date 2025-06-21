@@ -4,8 +4,8 @@ import java.time.Duration;
 import java.util.Optional;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
-import com.guia747.authentication.domain.RefreshTokenSession;
-import com.guia747.authentication.repository.RefreshTokenRepository;
+import com.guia747.domain.authentication.entity.RefreshTokenSession;
+import com.guia747.domain.authentication.repository.RefreshTokenRepository;
 
 @Repository
 public class DefaultRefreshTokenRepository implements RefreshTokenRepository {
