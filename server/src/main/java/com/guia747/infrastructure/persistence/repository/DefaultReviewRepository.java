@@ -1,5 +1,6 @@
 package com.guia747.infrastructure.persistence.repository;
 
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,16 @@ public class DefaultReviewRepository implements ReviewRepository {
         JpaReviewEntity entity = mapper.toEntity(review);
         JpaReviewEntity savedEntity = jpaRepository.save(entity);
         return mapper.toDomain(savedEntity);
+    }
+
+    @Override
+    public Optional<Review> findById(UUID id) {
+        return jpaRepository.findById(id).map(mapper::toDomain);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        jpaRepository.deleteById(id);
     }
 
     @Override

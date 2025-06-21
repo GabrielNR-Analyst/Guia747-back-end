@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,7 @@ import com.guia747.application.place.query.GetPlacesByCityQueryHandler;
 import com.guia747.application.place.usecase.CreatePlaceCategoryUseCase;
 import com.guia747.application.place.usecase.CreatePlaceUseCase;
 import com.guia747.application.place.usecase.CreateReviewUseCase;
+import com.guia747.application.place.usecase.DeleteReviewUseCase;
 import com.guia747.application.place.usecase.UpdatePlaceUseCase;
 import com.guia747.shared.PageResponse;
 import com.guia747.web.dtos.place.CategoryResponse;
@@ -59,6 +61,7 @@ public class PlaceController {
     private final GetAllCategoriesQueryHandler getAllCategoriesQueryHandler;
     private final CreateReviewUseCase createReviewUseCase;
     private final GetAllReviewsByPlaceIdHandler getAllReviewsByPlaceIdHandler;
+    private final DeleteReviewUseCase deleteReviewUseCase;
 
     @PostMapping
     public ResponseEntity<CreatePlaceResponse> create(
@@ -114,6 +117,13 @@ public class PlaceController {
         PageResponse<ReviewDetailsResponse> response = PageResponse.from(pageResponse);
 
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/reviews/{reviewId}")
+    public ResponseEntity<Void> deleteReview(@PathVariable UUID reviewId, @AuthenticationPrincipal Jwt jwt) {
+        UUID userId = UUID.fromString(jwt.getSubject());
+        deleteReviewUseCase.execute(reviewId, userId);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(

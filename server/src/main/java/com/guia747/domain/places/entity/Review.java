@@ -22,4 +22,8 @@ public class Review extends AggregateRoot<UUID> {
     public static Review createNew(Place place, User reviewer, int rating, String comment) {
         return new Review(place, reviewer, rating, comment, null, null);
     }
+
+    public boolean isOwnedBy(UUID userId) {
+        return this.reviewer.getId().equals(userId);
+    }
 }
