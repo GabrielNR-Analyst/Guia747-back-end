@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.guia747.application.city.query.GetAllCitiesByUfQuery;
 import com.guia747.application.city.query.GetAllCitiesByUfQueryHandler;
 import com.guia747.application.city.query.GetAllStatesQueryHandler;
-import com.guia747.web.dtos.city.GetAllCitiesResponse;
+import com.guia747.shared.PageResponse;
 import com.guia747.web.dtos.city.CityDetailsResponse;
 import com.guia747.web.dtos.city.StateResponse;
 
@@ -42,7 +42,7 @@ public class StateController {
     }
 
     @GetMapping("/{uf}/cities")
-    public ResponseEntity<GetAllCitiesResponse> getAllCitiesByUf(
+    public ResponseEntity<PageResponse<CityDetailsResponse>> getAllCitiesByUf(
             @PathVariable String uf,
             @RequestParam(defaultValue = "0") @Min(0) int page,
             @RequestParam(defaultValue = "20") @Min(0) @Max(100) int size,
@@ -55,7 +55,7 @@ public class StateController {
         GetAllCitiesByUfQuery query = new GetAllCitiesByUfQuery(uf.toUpperCase(), pageable);
         Page<CityDetailsResponse> cityResponses = getAllCitiesByUfQueryHandler.handle(query);
 
-        GetAllCitiesResponse response = GetAllCitiesResponse.from(cityResponses);
+        PageResponse<CityDetailsResponse> response = PageResponse.from(cityResponses);
         return ResponseEntity.ok(response);
     }
 }

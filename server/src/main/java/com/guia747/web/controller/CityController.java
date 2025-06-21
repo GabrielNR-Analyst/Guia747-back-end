@@ -23,7 +23,7 @@ import com.guia747.application.city.query.GetAllCitiesQueryHandler;
 import com.guia747.application.city.query.GetCityByIdQueryHandler;
 import com.guia747.application.city.usecase.CreateCityUseCase;
 import com.guia747.application.city.usecase.UpdateCityUseCase;
-import com.guia747.web.dtos.city.GetAllCitiesResponse;
+import com.guia747.shared.PageResponse;
 import com.guia747.web.dtos.city.UpdateCityRequest;
 import com.guia747.web.dtos.city.CreateCityRequest;
 import com.guia747.web.dtos.city.CityDetailsResponse;
@@ -96,11 +96,9 @@ public class CityController {
             summary = "List all cities (paginated, searchable, filterable)",
             description = "Get all cities in the system with pagination, sorting, search by name, and filter by UF"
     )
-    @ApiResponse(responseCode = "200", description = "Cities retrieved successfully", content = @Content(
-            schema = @Schema(implementation = GetAllCitiesResponse.class))
-    )
+    @ApiResponse(responseCode = "200", description = "Cities retrieved successfully")
     @GetMapping
-    public ResponseEntity<GetAllCitiesResponse> getAllCities(
+    public ResponseEntity<PageResponse<CityDetailsResponse>> getAllCities(
             @Parameter(description = "Search term for city name")
             @RequestParam(required = false) String search,
             @Parameter(description = "Page number (0-based)")
@@ -118,7 +116,7 @@ public class CityController {
         GetAllCitiesQuery query = new GetAllCitiesQuery(search, pageable);
         Page<CityDetailsResponse> cityResponses = getAllCitiesQueryHandler.handle(query);
 
-        GetAllCitiesResponse response = GetAllCitiesResponse.from(cityResponses);
+        PageResponse<CityDetailsResponse> response = PageResponse.from(cityResponses);
         return ResponseEntity.ok(response);
     }
 }
