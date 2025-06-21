@@ -1,38 +1,37 @@
 package com.guia747.web.dtos.place;
 
+import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 import com.guia747.domain.places.entity.Place;
+import com.guia747.domain.places.valueobject.Address;
 import com.guia747.domain.places.valueobject.Contact;
 import com.guia747.domain.places.valueobject.FAQ;
+import com.guia747.domain.places.valueobject.OperatingHours;
 
 public record PlaceDetailsResponse(
         UUID id,
         UUID ownerId,
         String name,
         String about,
-        AddressRequest address,
-        ContactData contact,
+        AddressResponse address,
+        ContactResponse contact,
         String youtubeVideoUrl,
         String thumbnailUrl,
-        List<OperatingHoursData> operatingHours,
-        List<FAQData> faq
+        List<OperatingHoursResponse> operatingHours,
+        List<FAQResponse> faqs
 ) {
 
     public static PlaceDetailsResponse from(Place place) {
-        List<OperatingHoursData> operatingHours = place.getOperatingHours()
+        List<OperatingHoursResponse> operatingHours = place.getOperatingHours()
                 .stream()
-                .map(data -> new OperatingHoursData(
-                        data.getDayOfWeek(),
-                        data.getOpenTime(),
-                        data.getCloseTime()
-                ))
+                .map(OperatingHoursResponse::from)
                 .toList();
 
-        List<FAQData> faq = place.getFaqs().stream()
-                .map(FAQData::from)
+        List<FAQResponse> faq = place.getFaqs().stream()
+                .map(FAQResponse::from)
                 .toList();
 
         return new PlaceDetailsResponse(
@@ -40,8 +39,8 @@ public record PlaceDetailsResponse(
                 place.getUser().getId(),
                 place.getName(),
                 place.getAbout(),
-                AddressRequest.from(place.getAddress()),
-                ContactData.from(place.getContact()),
+                AddressResponse.from(place.getAddress()),
+                ContactResponse.from(place.getContact()),
                 place.getYoutubeVideoUrl(),
                 place.getThumbnailUrl(),
                 operatingHours,
@@ -49,28 +48,35 @@ public record PlaceDetailsResponse(
         );
     }
 
-    public record FAQData(
+    public record FAQResponse(
             String question,
             String answer
     ) {
 
-        public static FAQData from(FAQ faq) {
-            return new FAQData(
+        public static FAQResponse from(FAQ faq) {
+            return new FAQResponse(
                     faq.getQuestion(),
                     faq.getAnswer()
             );
         }
     }
 
-    public record OperatingHoursData(
+    public record OperatingHoursResponse(
             DayOfWeek dayOfWeek,
             LocalTime openTime,
             LocalTime closeTime
     ) {
 
+        public static OperatingHoursResponse from(OperatingHours operatingHours) {
+            return new OperatingHoursResponse(
+                    operatingHours.getDayOfWeek(),
+                    operatingHours.getOpenTime(),
+                    operatingHours.getCloseTime()
+            );
+        }
     }
 
-    public record ContactData(
+    public record ContactResponse(
             String phoneNumber,
             String instagramUrl,
             String facebookUrl,
@@ -78,13 +84,36 @@ public record PlaceDetailsResponse(
             String email
     ) {
 
-        public static ContactData from(Contact contact) {
-            return new ContactData(
+        public static ContactResponse from(Contact contact) {
+            return new ContactResponse(
                     contact.getPhoneNumber(),
                     contact.getInstagramUrl(),
                     contact.getFacebookUrl(),
                     contact.getWhatsappUrl(),
                     contact.getEmail()
+            );
+        }
+    }
+
+    public record AddressResponse(
+            String street,
+            String zipCode,
+            String number,
+            String neighborhood,
+            String complement,
+            BigDecimal latitude,
+            BigDecimal longitude
+    ) {
+
+        public static AddressResponse from(Address address) {
+            return new AddressResponse(
+                    address.getStreet(),
+                    address.getZipCode(),
+                    address.getNumber(),
+                    address.getNeighborhood(),
+                    address.getComplement(),
+                    address.getLatitude(),
+                    address.getLongitude()
             );
         }
     }

@@ -45,7 +45,9 @@ public class DefaultUpdatePlaceUseCase implements UpdatePlaceUseCase {
                     request.address().street(),
                     request.address().number(),
                     request.address().neighborhood(),
-                    request.address().complement()
+                    request.address().complement(),
+                    request.address().latitude(),
+                    request.address().longitude()
             );
 
             place.updateAddress(address);

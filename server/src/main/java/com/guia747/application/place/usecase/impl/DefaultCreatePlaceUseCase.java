@@ -55,7 +55,9 @@ public class DefaultCreatePlaceUseCase implements CreatePlaceUseCase {
                 request.address().street(),
                 request.address().number(),
                 request.address().neighborhood(),
-                request.address().complement()
+                request.address().complement(),
+                request.address().latitude(),
+                request.address().longitude()
         );
 
         Place place = Place.createNew(user, city, request.name(), request.about(), address);
