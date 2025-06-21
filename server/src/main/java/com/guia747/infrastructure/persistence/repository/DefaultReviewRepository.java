@@ -1,6 +1,8 @@
 package com.guia747.infrastructure.persistence.repository;
 
 import java.util.UUID;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import com.guia747.domain.places.entity.Review;
 import com.guia747.domain.places.repository.ReviewRepository;
@@ -29,5 +31,10 @@ public class DefaultReviewRepository implements ReviewRepository {
     @Override
     public boolean existsByPlaceIdAndReviewerId(UUID placeId, UUID reviewerId) {
         return jpaRepository.existsByPlaceIdAndReviewerId(placeId, reviewerId);
+    }
+
+    @Override
+    public Page<Review> findAllByPlaceId(UUID placeId, Pageable pageable) {
+        return jpaRepository.findAllByPlaceId(placeId, pageable).map(mapper::toDomain);
     }
 }

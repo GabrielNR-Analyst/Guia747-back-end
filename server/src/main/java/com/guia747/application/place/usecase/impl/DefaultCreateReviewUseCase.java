@@ -15,7 +15,7 @@ import com.guia747.domain.users.entity.User;
 import com.guia747.domain.users.exception.UserNotFoundException;
 import com.guia747.domain.users.repository.UserRepository;
 import com.guia747.web.dtos.reviews.CreateReviewRequest;
-import com.guia747.web.dtos.reviews.CreateReviewResponse;
+import com.guia747.web.dtos.reviews.ReviewDetailsResponse;
 
 @Service
 public class DefaultCreateReviewUseCase implements CreateReviewUseCase {
@@ -36,7 +36,7 @@ public class DefaultCreateReviewUseCase implements CreateReviewUseCase {
 
     @Override
     @Transactional
-    public CreateReviewResponse execute(UUID placeId, UUID userId, CreateReviewRequest request) {
+    public ReviewDetailsResponse execute(UUID placeId, UUID userId, CreateReviewRequest request) {
         if (isPlaceOwner(placeId, userId)) {
             throw new OwnerCannotReviewOwnPlaceException();
         }
@@ -51,12 +51,7 @@ public class DefaultCreateReviewUseCase implements CreateReviewUseCase {
         Review review = Review.createNew(place, user, request.rating(), request.comment());
         Review savedReview = reviewRepository.save(review);
 
-        return new CreateReviewResponse(
-                savedReview.getId(),
-                savedReview.getRating(),
-                savedReview.getComment(),
-                savedReview.getCreatedAt()
-        );
+        return ReviewDetailsResponse.from(savedReview);
     }
 
     private boolean isPlaceOwner(UUID placeId, UUID userId) {

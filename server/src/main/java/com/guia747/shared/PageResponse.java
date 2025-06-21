@@ -6,21 +6,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
 @Schema(description = "A generic paginated response structure for API data, including content and pagination metadata.")
-public abstract class PageResponse<T> {
+public record PageResponse<T>(List<T> data, com.guia747.shared.PageResponse.PaginationMetadata metadata) {
 
-    private final List<T> data;
-    private final PaginationMetadata metadata;
-
-    protected PageResponse(List<T> data, PaginationMetadata metadata) {
-        this.data = data;
-        this.metadata = metadata;
-    }
-
-    public static <T, R extends PageResponse<T>> R from(Page<T> page,
-            ResponseConstructor<T, R> responseConstructor) {
-
+    public static <T> PageResponse<T> from(Page<T> page) {
         PaginationMetadata metadata = new PaginationMetadata(
                 page.getNumber(),
                 page.getSize(),
@@ -32,7 +21,7 @@ public abstract class PageResponse<T> {
                 page.isLast()
         );
 
-        return responseConstructor.construct(page.getContent(), metadata);
+        return new PageResponse<>(page.getContent(), metadata);
     }
 
     @Getter
@@ -56,11 +45,5 @@ public abstract class PageResponse<T> {
         private boolean isFirst;
         @Schema(description = "Indicates if this is the last page", example = "false")
         private boolean isLast;
-    }
-
-    @FunctionalInterface
-    public interface ResponseConstructor<T, R extends PageResponse<T>> {
-
-        R construct(List<T> data, PaginationMetadata metadata);
     }
 }

@@ -17,8 +17,9 @@ public class Review extends AggregateRoot<UUID> {
     private String comment;
 
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public static Review createNew(Place place, User reviewer, int rating, String comment) {
-        return new Review(place, reviewer, rating, comment, null);
+        return new Review(place, reviewer, rating, comment, null, null);
     }
 }

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.guia747.application.place.query.GetAllCategoriesQueryHandler;
+import com.guia747.application.place.query.GetAllReviewsByPlaceIdHandler;
 import com.guia747.application.place.query.GetPlaceDetailsQuery;
 import com.guia747.application.place.query.GetPlaceDetailsQueryHandler;
 import com.guia747.application.place.query.GetPlacesByCityQuery;
@@ -28,16 +29,16 @@ import com.guia747.application.place.usecase.CreatePlaceCategoryUseCase;
 import com.guia747.application.place.usecase.CreatePlaceUseCase;
 import com.guia747.application.place.usecase.CreateReviewUseCase;
 import com.guia747.application.place.usecase.UpdatePlaceUseCase;
+import com.guia747.shared.PageResponse;
 import com.guia747.web.dtos.place.CategoryResponse;
 import com.guia747.web.dtos.place.CreatePlaceCategoryRequest;
 import com.guia747.web.dtos.place.CreatePlaceRequest;
 import com.guia747.web.dtos.place.CreatePlaceResponse;
-import com.guia747.web.dtos.place.GetAllPlacesResponse;
 import com.guia747.web.dtos.place.PlaceDetailsResponse;
 import com.guia747.web.dtos.place.UpdatePlaceRequest;
 import com.guia747.domain.places.entity.Place;
 import com.guia747.web.dtos.reviews.CreateReviewRequest;
-import com.guia747.web.dtos.reviews.CreateReviewResponse;
+import com.guia747.web.dtos.reviews.ReviewDetailsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -57,6 +58,7 @@ public class PlaceController {
     private final CreatePlaceCategoryUseCase createPlaceCategoryUseCase;
     private final GetAllCategoriesQueryHandler getAllCategoriesQueryHandler;
     private final CreateReviewUseCase createReviewUseCase;
+    private final GetAllReviewsByPlaceIdHandler getAllReviewsByPlaceIdHandler;
 
     @PostMapping
     public ResponseEntity<CreatePlaceResponse> create(
@@ -87,14 +89,31 @@ public class PlaceController {
     }
 
     @PostMapping("/{placeId}/reviews")
-    public ResponseEntity<CreateReviewResponse> createReview(
+    public ResponseEntity<ReviewDetailsResponse> createReview(
             @PathVariable UUID placeId,
             @Valid @RequestBody CreateReviewRequest request,
             @AuthenticationPrincipal Jwt jwt
     ) {
         UUID userId = UUID.fromString(jwt.getSubject());
-        CreateReviewResponse response = createReviewUseCase.execute(placeId, userId, request);
+        ReviewDetailsResponse response = createReviewUseCase.execute(placeId, userId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/{placeId}/reviews")
+    public ResponseEntity<PageResponse<ReviewDetailsResponse>> getAllReviewsFromPlace(
+            @PathVariable UUID placeId,
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDirection
+    ) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        PageRequest pageable = PageRequest.of(page, size, sort);
+
+        Page<ReviewDetailsResponse> pageResponse = getAllReviewsByPlaceIdHandler.handle(placeId, pageable);
+        PageResponse<ReviewDetailsResponse> response = PageResponse.from(pageResponse);
+
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
@@ -106,7 +125,7 @@ public class PlaceController {
             @ApiResponse(responseCode = "404", description = "City not found", content = @Content),
     })
     @GetMapping("/cities/{cityId}/places")
-    public ResponseEntity<GetAllPlacesResponse> getAllPlacesByCity(
+    public ResponseEntity<PageResponse<PlaceDetailsResponse>> getAllPlacesByCity(
             @PathVariable UUID cityId,
             @RequestParam(defaultValue = "0") @Min(0) int page,
             @RequestParam(defaultValue = "20") int size,
@@ -121,7 +140,7 @@ public class PlaceController {
 
         Page<PlaceDetailsResponse> responsePage = placesPage.map(PlaceDetailsResponse::from);
 
-        GetAllPlacesResponse response = GetAllPlacesResponse.from(responsePage);
+        PageResponse<PlaceDetailsResponse> response = PageResponse.from(responsePage);
         return ResponseEntity.ok(response);
     }
 
