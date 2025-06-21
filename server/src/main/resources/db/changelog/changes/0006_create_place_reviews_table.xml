@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1" author="Guilherme Oliveira">
+        <createTable tableName="place_reviews">
+            <column name="id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_place_reviews"/>
+            </column>
+            <column name="place_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="reviewer_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rating" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="VARCHAR(1000)"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex indexName="idx_review_created_at" tableName="place_reviews">
+            <column name="created_at"/>
+        </createIndex>
+        <createIndex indexName="idx_review_place_reviewer" tableName="place_reviews" unique="true">
+            <column name="place_id"/>
+            <column name="reviewer_id"/>
+        </createIndex>
+        <createIndex indexName="idx_review_rating" tableName="place_reviews">
+            <column name="rating"/>
+        </createIndex>
+        <addForeignKeyConstraint baseColumnNames="place_id" baseTableName="place_reviews"
+                                 constraintName="FK_PLACE_REVIEWS_ON_PLACE" referencedColumnNames="id"
+                                 referencedTableName="places"/>
+        <createIndex indexName="idx_review_place_id" tableName="place_reviews">
+            <column name="place_id"/>
+        </createIndex>
+        <addForeignKeyConstraint baseColumnNames="reviewer_id" baseTableName="place_reviews"
+                                 constraintName="FK_PLACE_REVIEWS_ON_REVIEWER" referencedColumnNames="id"
+                                 referencedTableName="user_accounts"/>
+        <createIndex indexName="idx_review_reviewer_id" tableName="place_reviews">
+            <column name="reviewer_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
