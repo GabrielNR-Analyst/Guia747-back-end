@@ -1,7 +1,8 @@
-package com.guia747.application.place.usecase;
+package com.guia747.application.place.usecase.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.guia747.application.place.usecase.CreatePlaceCategoryUseCase;
 import com.guia747.domain.places.entity.Category;
 import com.guia747.domain.places.exception.CategoryAlreadyExistsException;
 import com.guia747.domain.places.repository.CategoryRepository;

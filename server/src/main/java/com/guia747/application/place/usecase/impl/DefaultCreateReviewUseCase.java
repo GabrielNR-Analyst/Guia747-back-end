@@ -1,8 +1,9 @@
-package com.guia747.application.place.usecase;
+package com.guia747.application.place.usecase.impl;
 
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.guia747.application.place.usecase.CreateReviewUseCase;
 import com.guia747.domain.places.entity.Place;
 import com.guia747.domain.places.entity.Review;
 import com.guia747.domain.places.exception.DuplicateReviewException;

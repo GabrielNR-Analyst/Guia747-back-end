@@ -1,59 +1,69 @@
-package com.guia747.application.place.usecase;
+package com.guia747.application.place.usecase.impl;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.guia747.application.place.usecase.CreatePlaceUseCase;
+import com.guia747.domain.users.entity.User;
+import com.guia747.domain.users.repository.UserRepository;
+import com.guia747.domain.users.exception.UserNotFoundException;
+import com.guia747.domain.city.entity.City;
+import com.guia747.domain.city.exception.CityNotFoundException;
+import com.guia747.domain.city.repository.CityRepository;
 import com.guia747.domain.places.entity.Category;
 import com.guia747.domain.places.entity.Place;
 import com.guia747.domain.places.exception.CategoryNotFoundException;
-import com.guia747.domain.places.exception.PlaceNotFoundException;
 import com.guia747.domain.places.repository.CategoryRepository;
 import com.guia747.domain.places.repository.PlaceRepository;
 import com.guia747.domain.places.valueobject.Address;
 import com.guia747.domain.places.valueobject.Contact;
-import com.guia747.domain.places.valueobject.FAQ;
 import com.guia747.domain.places.valueobject.OperatingHours;
+import com.guia747.web.dtos.place.CreatePlaceRequest;
+import com.guia747.web.dtos.place.CreatePlaceResponse;
 import com.guia747.web.dtos.place.OperatingHoursRequest;
-import com.guia747.web.dtos.place.UpdatePlaceRequest;
 
 @Service
-public class DefaultUpdatePlaceUseCase implements UpdatePlaceUseCase {
+public class DefaultCreatePlaceUseCase implements CreatePlaceUseCase {
 
     private final PlaceRepository placeRepository;
+    private final CityRepository cityRepository;
+    private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
 
-    public DefaultUpdatePlaceUseCase(PlaceRepository placeRepository, CategoryRepository categoryRepository) {
+    public DefaultCreatePlaceUseCase(
+            PlaceRepository placeRepository,
+            CityRepository cityRepository,
+            UserRepository userRepository,
+            CategoryRepository categoryRepository
+    ) {
         this.placeRepository = placeRepository;
+        this.cityRepository = cityRepository;
+        this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
     }
 
     @Override
     @Transactional
-    public void execute(UUID placeId, UpdatePlaceRequest request) {
-        Place place = placeRepository.findById(placeId).orElseThrow(PlaceNotFoundException::new);
+    public CreatePlaceResponse execute(UUID ownerId, CreatePlaceRequest request) {
+        User user = userRepository.findById(ownerId).orElseThrow(UserNotFoundException::new);
+        City city = cityRepository.findById(request.cityId()).orElseThrow(CityNotFoundException::new);
 
-        // Update basic info
-        place.updateBasicInfo(request.name(), request.about());
+        Address address = Address.createNew(
+                request.address().zipCode(),
+                request.address().street(),
+                request.address().number(),
+                request.address().neighborhood(),
+                request.address().complement()
+        );
 
-        // Update address
-        if (request.address() != null) {
-            Address address = Address.createNew(
-                    request.address().zipCode(),
-                    request.address().street(),
-                    request.address().number(),
-                    request.address().neighborhood(),
-                    request.address().complement()
-            );
-
-            place.updateAddress(address);
-        }
+        Place place = Place.createNew(user, city, request.name(), request.about(), address);
 
         // Update contact
         if (request.contact() != null) {
             Contact contact = Contact.createNew(
-                    request.contact().phone(),
+                    request.contact().phoneNumber(),
                     request.contact().instagramUrl(),
                     request.contact().facebookUrl(),
                     request.contact().whatsappUrl(),
@@ -70,14 +80,7 @@ public class DefaultUpdatePlaceUseCase implements UpdatePlaceUseCase {
             place.updateOperatingHours(operatingHours);
         }
 
-        // Update faqs
-        if (request.faqs() != null) {
-            List<FAQ> faqs = request.faqs().stream()
-                    .map(faq -> FAQ.createNew(faq.question(), faq.answer()))
-                    .toList();
-            place.updateFaqs(faqs);
-        }
-
+        // Update categories
         if (request.categoryIds() != null) {
             List<Category> categories = categoryRepository.findAllByIdIn(request.categoryIds());
 
@@ -88,8 +91,8 @@ public class DefaultUpdatePlaceUseCase implements UpdatePlaceUseCase {
             place.updateCategories(new HashSet<>(categories));
         }
 
-        place.updateMedia(request.youtubeVideoUrl(), request.thumbnailUrl());
-        placeRepository.save(place);
+        Place savedPlace = placeRepository.save(place);
+        return new CreatePlaceResponse(savedPlace.getId());
     }
 
     private OperatingHours createOperatingHours(OperatingHoursRequest data) {
