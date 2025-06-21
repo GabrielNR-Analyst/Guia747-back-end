@@ -75,12 +75,12 @@ public class PlaceController {
     }
 
     @PutMapping("/{placeId}")
-    public ResponseEntity<Void> updatePlace(
+    public ResponseEntity<PlaceDetailsResponse> updatePlace(
             @PathVariable UUID placeId,
             @Valid @RequestBody UpdatePlaceRequest request
     ) {
-        updatePlaceUseCase.execute(placeId, request);
-        return ResponseEntity.noContent().build();
+        PlaceDetailsResponse response = updatePlaceUseCase.execute(placeId, request);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{placeId}")

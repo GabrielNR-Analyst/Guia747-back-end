@@ -17,6 +17,7 @@ import com.guia747.domain.places.valueobject.Contact;
 import com.guia747.domain.places.valueobject.FAQ;
 import com.guia747.domain.places.valueobject.OperatingHours;
 import com.guia747.web.dtos.place.OperatingHoursRequest;
+import com.guia747.web.dtos.place.PlaceDetailsResponse;
 import com.guia747.web.dtos.place.UpdatePlaceRequest;
 
 @Service
@@ -32,7 +33,7 @@ public class DefaultUpdatePlaceUseCase implements UpdatePlaceUseCase {
 
     @Override
     @Transactional
-    public void execute(UUID placeId, UpdatePlaceRequest request) {
+    public PlaceDetailsResponse execute(UUID placeId, UpdatePlaceRequest request) {
         Place place = placeRepository.findById(placeId).orElseThrow(PlaceNotFoundException::new);
 
         // Update basic info
@@ -92,7 +93,9 @@ public class DefaultUpdatePlaceUseCase implements UpdatePlaceUseCase {
         }
 
         place.updateMedia(request.youtubeVideoUrl(), request.thumbnailUrl());
-        placeRepository.save(place);
+        Place updatedPlace = placeRepository.save(place);
+
+        return PlaceDetailsResponse.from(updatedPlace);
     }
 
     private OperatingHours createOperatingHours(OperatingHoursRequest data) {
