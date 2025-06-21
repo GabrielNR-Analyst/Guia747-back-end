@@ -26,6 +26,7 @@ import com.guia747.application.place.query.GetPlacesByCityQuery;
 import com.guia747.application.place.query.GetPlacesByCityQueryHandler;
 import com.guia747.application.place.usecase.CreatePlaceCategoryUseCase;
 import com.guia747.application.place.usecase.CreatePlaceUseCase;
+import com.guia747.application.place.usecase.CreateReviewUseCase;
 import com.guia747.application.place.usecase.UpdatePlaceUseCase;
 import com.guia747.web.dtos.place.CategoryResponse;
 import com.guia747.web.dtos.place.CreatePlaceCategoryRequest;
@@ -35,6 +36,8 @@ import com.guia747.web.dtos.place.GetAllPlacesResponse;
 import com.guia747.web.dtos.place.PlaceDetailsResponse;
 import com.guia747.web.dtos.place.UpdatePlaceRequest;
 import com.guia747.domain.places.entity.Place;
+import com.guia747.web.dtos.reviews.CreateReviewRequest;
+import com.guia747.web.dtos.reviews.CreateReviewResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -53,6 +56,7 @@ public class PlaceController {
     private final GetPlaceDetailsQueryHandler getPlaceDetailsQueryHandler;
     private final CreatePlaceCategoryUseCase createPlaceCategoryUseCase;
     private final GetAllCategoriesQueryHandler getAllCategoriesQueryHandler;
+    private final CreateReviewUseCase createReviewUseCase;
 
     @PostMapping
     public ResponseEntity<CreatePlaceResponse> create(
@@ -80,6 +84,17 @@ public class PlaceController {
         PlaceDetailsResponse response = getPlaceDetailsQueryHandler.handle(query);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{placeId}/reviews")
+    public ResponseEntity<CreateReviewResponse> createReview(
+            @PathVariable UUID placeId,
+            @Valid @RequestBody CreateReviewRequest request,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        UUID userId = UUID.fromString(jwt.getSubject());
+        CreateReviewResponse response = createReviewUseCase.execute(placeId, userId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(

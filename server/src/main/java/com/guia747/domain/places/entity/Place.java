@@ -87,4 +87,8 @@ public final class Place extends AggregateRoot<UUID> {
             this.categories.addAll(categories);
         }
     }
+
+    public boolean isOwnedBy(UUID userId) {
+        return this.user.getId().equals(userId);
+    }
 }
