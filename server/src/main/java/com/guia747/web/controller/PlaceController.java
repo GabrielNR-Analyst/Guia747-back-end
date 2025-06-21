@@ -46,11 +46,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/places")
 @RequiredArgsConstructor
+@Tag(name = "Places", description = "Management of places (establishments), their categories, and user reviews.")
 public class PlaceController {
 
     private final CreatePlaceUseCase createPlaceUseCase;
@@ -63,6 +65,20 @@ public class PlaceController {
     private final GetAllReviewsByPlaceIdHandler getAllReviewsByPlaceIdHandler;
     private final DeleteReviewUseCase deleteReviewUseCase;
 
+    @Operation(
+            summary = "Create a new place",
+            description = "Creates a new place, such as a restaurant, or store, for the authenticated business owner"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Place created successfully", content = @Content(
+                    schema = @Schema(implementation = CreatePlaceResponse.class)
+            )),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request payload or missing required fields",
+                    content = @Content
+            )
+    })
     @PostMapping
     public ResponseEntity<CreatePlaceResponse> create(
             @Valid @RequestBody CreatePlaceRequest request,
@@ -74,6 +90,19 @@ public class PlaceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Operation(
+            summary = "Update an existing place",
+            description = "Updates the details of an existing place. Only the place owner can update their place."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Place updated successfully"),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request payload or validation errors",
+                    content = @Content
+            ),
+            @ApiResponse(responseCode = "404", description = "Place not found for the given ID", content = @Content)
+    })
     @PutMapping("/{placeId}")
     public ResponseEntity<PlaceDetailsResponse> updatePlace(
             @PathVariable UUID placeId,
@@ -83,6 +112,14 @@ public class PlaceController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "Get details of a specific place",
+            description = "Retrieves the detailed information for a single place by ID"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Place retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Place not found for the given ID", content = @Content),
+    })
     @GetMapping("/{placeId}")
     public ResponseEntity<PlaceDetailsResponse> getPlace(@PathVariable UUID placeId) {
         GetPlaceDetailsQuery query = new GetPlaceDetailsQuery(placeId);
@@ -91,6 +128,24 @@ public class PlaceController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "Create a new review for a place",
+            description = "Allows an authenticated user to submit a review and rating for a specific place. " +
+                    "Users cannot rate their own places, and can only submit one review per place."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Review created successfully"),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Owners cannot rate their own places",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "User has already rated this place",
+                    content = @Content
+            )
+    })
     @PostMapping("/{placeId}/reviews")
     public ResponseEntity<ReviewDetailsResponse> createReview(
             @PathVariable UUID placeId,
@@ -102,6 +157,14 @@ public class PlaceController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Operation(
+            summary = "List all reviews for a specific place",
+            description = "Retrieves a paginated list of all user reviews and ratings for a given place"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Paginated list of reviews retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Place not found", content = @Content),
+    })
     @GetMapping("/{placeId}/reviews")
     public ResponseEntity<PageResponse<ReviewDetailsResponse>> getAllReviewsFromPlace(
             @PathVariable UUID placeId,
@@ -119,6 +182,20 @@ public class PlaceController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(
+            summary = "Delete a specific review",
+            description = "Delete a review of your exclusive identifier. " +
+                    "Only the reviewer or the owner of the place can delete a review"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Review deleted successfully"),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "User is not the owner of this review or lacks necessary permissions",
+                    content = @Content
+            ),
+            @ApiResponse(responseCode = "404", description = "Review not found", content = @Content),
+    })
     @DeleteMapping("/reviews/{reviewId}")
     public ResponseEntity<Void> deleteReview(@PathVariable UUID reviewId, @AuthenticationPrincipal Jwt jwt) {
         UUID userId = UUID.fromString(jwt.getSubject());

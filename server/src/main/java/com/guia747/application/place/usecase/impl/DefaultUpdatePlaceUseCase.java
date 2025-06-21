@@ -57,7 +57,7 @@ public class DefaultUpdatePlaceUseCase implements UpdatePlaceUseCase {
         // Update contact
         if (request.contact() != null) {
             Contact contact = Contact.createNew(
-                    request.contact().phone(),
+                    request.contact().phoneNumber(),
                     request.contact().instagramUrl(),
                     request.contact().facebookUrl(),
                     request.contact().whatsappUrl(),

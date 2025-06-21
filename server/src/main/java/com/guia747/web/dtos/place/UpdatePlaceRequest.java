@@ -1,67 +1,59 @@
 package com.guia747.web.dtos.place;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(description = "Request payload for creating a new place")
 public record UpdatePlaceRequest(
+        @Schema(description = "The name of the place", example = "Doce & Companhia")
         String name,
+
+        @Schema(
+                description = "A short description of the place",
+                example = """
+                        O melhor lugar da cidade para você tomar um bom café.
+                        Fatias de tortas artesanais, bolos, lanches e biscoitos caseiros.
+                        """
+        )
         String about,
-        @Valid AddressRequest address,
-        @Valid ContactRequest contact,
+
+        @Valid
+        @Schema(description = "Geographical address details of the place")
+        UpdatePlaceAddressRequest address,
+
+        @Valid
+        @Schema(description = "Contact details of the place")
+        PlaceContactRequest contact,
+
+        @Size(max = 255)
+        @Schema(
+                description = "URL to a YouTube video promoting the place",
+                example = "https://www.youtube.com/watch?v=video_id"
+        )
         String youtubeVideoUrl,
+
+        @Size(max = 255)
+        @Schema(
+                description = "URL to the place's thumbnail image"
+        )
         String thumbnailUrl,
-        @Valid List<OperatingHoursRequest> operatingHours,
-        @Valid List<FAQRequest> faqs,
+
+        @Valid
+        @Schema(description = "List of daily operating hours for the place")
+        List<OperatingHoursRequest> operatingHours,
+
+        @Valid
+        @Schema(description = "List of updated Frequently Asked Questions (FAQs)")
+        List<UpdatePlaceFAQRequest> faqs,
+
+        @Schema(
+                description = "List of unique identifiers for categories associated with this place. " +
+                        "This will replace existing categories"
+        )
         List<UUID> categoryIds
 ) {
-
-    public record AddressRequest(
-            @Size(min = 3, max = 255)
-            @Pattern(regexp = "^[\\p{L}\\d\\s.'-]+$", message = "Deve conter apenas letras, números, espaços, " +
-                    "pontos, apóstrofos e hífens")
-            String street,
-
-            @Pattern(regexp = "^\\d{5}-\\d{3}$", message = "Deve ser um CEP válido no formato XXXXX-XXX")
-            String zipCode,
-
-            @Pattern(regexp = "^[a-zA-Z0-9\\s-]*$", message = "O número do endereço contém caracteres inválidos.")
-            String number,
-
-            @Size(max = 100)
-            @Size(max = 100) String complement,
-
-            @Size(min = 3, max = 100)
-            @Pattern(regexp = "^[\\p{L}\\d\\s.'-]+$", message = "Deve conter apenas letras, números, espaços, " +
-                    "pontos, apóstrofos e hífens")
-            @Size(max = 100) String neighborhood,
-
-            BigDecimal latitude,
-
-            BigDecimal longitude
-    ) {
-
-    }
-
-    public record ContactRequest(
-            @Size(max = 20) String phone,
-            @Size(max = 100) String email,
-            @Size(max = 20) String whatsappUrl,
-            @Size(max = 100) String instagramUrl,
-            @Size(max = 100) String facebookUrl
-    ) {
-
-    }
-
-    public record FAQRequest(
-            @NotBlank String question,
-            @NotBlank String answer
-    ) {
-
-    }
 
 }
